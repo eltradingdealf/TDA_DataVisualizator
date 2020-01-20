@@ -8,6 +8,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="Welcome to me.">
     <meta name="author" content="Alfredo Sanz | https://github.com/AlfredoSanz-Indra">
+    <link rel="icon" href="../favicon.ico">
     
      <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -97,4 +98,26 @@
     
 </body>
 <!-- END BODY -->
+
+ <!-- GLOBAL SCRIPTS -->
+    <script src="{{datas.domain}}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{datas.domain}}/static/js/tether.min.js"></script>
+    <script src="{{datas.domain}}/static/js/bootstrap.min.js"></script>
+    <script src="{{datas.domain}}/static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{datas.domain}}/static/js/app.js"></script>
+
+    <script>
+        var mobile = '-';
+        var domain = '{{datas.domain}}';
+
+        $(document).ready(function() {
+
+            const mydomain = $('#mainform #mydomain').val();
+
+            console.log(mydomain);
+
+
+        });//fin ready
+    </script>
+
 </html>
