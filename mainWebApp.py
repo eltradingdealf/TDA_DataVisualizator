@@ -84,12 +84,174 @@ def helloWeb():
     except Exception as err:
         app.logger.error(str(err))
         app.logger.exception("@Error")
-        errormessage = '*Error Redireting index: ' + str(err)
+        errormessage = '*Error Redirecting index: ' + str(err)
     #
 
     # logging.info('tem_values=' + repr(tem_values))
     app.logger.info("---helloWeb ENDS")
     return render_template('index.html', datas=tem_values)
-
-
 # fin helloWeb
+
+
+
+@app.route("/etda/web/eurofx")
+def gotoEurofx():
+    app.logger.info("---gotoEurofx INIT")
+
+    errormessage = '0'
+    tem_values = {}
+    resultData = {}
+
+    try:
+        app.logger.debug(request.url_root)
+
+        # Call to Controller
+        try:
+            # controller = Mainpage_Controller()
+            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+
+            resultData['fecha'] = "20-01-2020"
+
+        except Exception as err:
+            app.logger.error(str(err))
+            app.logger.exception("@Error")
+        #
+
+        tem_values = {'errormessage': errormessage,
+                      'domain': request.url_root[:-1],  # quita la barra final
+                      'fecha': resultData['fecha']
+                      }
+
+    except Exception as err:
+        app.logger.error(str(err))
+        app.logger.exception("@Error")
+        errormessage = '*Error Redirecting index: ' + str(err)
+    #
+
+    # logging.info('tem_values=' + repr(tem_values))
+    app.logger.info("---gotoEurofx ENDS")
+    return render_template('market-eurofx.html', datas=tem_values)
+# fin gotoEurofx
+
+
+
+@app.route("/etda/web/sp500")
+def gotoSp500():
+    app.logger.info("---gotoSp500 INIT")
+
+    errormessage = '0'
+    tem_values = {}
+    resultData = {}
+
+    try:
+        app.logger.debug(request.url_root)
+
+        # Call to Controller
+        try:
+            # controller = Mainpage_Controller()
+            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+
+            resultData['fecha'] = "20-01-2020"
+
+        except Exception as err:
+            app.logger.error(str(err))
+            app.logger.exception("@Error")
+        #
+
+        tem_values = {'errormessage': errormessage,
+                      'domain': request.url_root[:-1],  # quita la barra final
+                      'fecha': resultData['fecha']
+                      }
+
+    except Exception as err:
+        app.logger.error(str(err))
+        app.logger.exception("@Error")
+        errormessage = '*Error Redirecting index: ' + str(err)
+    #
+
+    # logging.info('tem_values=' + repr(tem_values))
+    app.logger.info("---gotoSp500 ENDS")
+    return render_template('not-avalaible.html', datas=tem_values)
+# fin gotoSp500
+
+
+
+@app.route("/etda/web/nasdaq")
+def gotoNasdaq():
+    app.logger.info("---gotoNasdaq INIT")
+
+    errormessage = '0'
+    tem_values = {}
+    resultData = {}
+
+    try:
+        app.logger.debug(request.url_root)
+
+        # Call to Controller
+        try:
+            # controller = Mainpage_Controller()
+            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+
+            resultData['fecha'] = "20-01-2020"
+
+        except Exception as err:
+            app.logger.error(str(err))
+            app.logger.exception("@Error")
+        #
+
+        tem_values = {'errormessage': errormessage,
+                      'domain': request.url_root[:-1],  # quita la barra final
+                      'fecha': resultData['fecha']
+                      }
+
+    except Exception as err:
+        app.logger.error(str(err))
+        app.logger.exception("@Error")
+        errormessage = '*Error Redirecting index: ' + str(err)
+    #
+
+    # logging.info('tem_values=' + repr(tem_values))
+    app.logger.info("---gotoNasdaq ENDS")
+    return render_template('not-avalaible.html', datas=tem_values)
+# fin gotoNasdaq
+
+
+
+@app.route("/etda/web/gold")
+def gotoGold():
+    app.logger.info("---gotoGold INIT")
+
+    errormessage = '0'
+    tem_values = {}
+    resultData = {}
+
+    try:
+        app.logger.debug(request.url_root)
+
+        # Call to Controller
+        try:
+            # controller = Mainpage_Controller()
+            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+
+            resultData['fecha'] = "20-01-2020"
+
+        except Exception as err:
+            app.logger.error(str(err))
+            app.logger.exception("@Error")
+        #
+
+        tem_values = {'errormessage': errormessage,
+                      'domain': request.url_root[:-1],  # quita la barra final
+                      'fecha': resultData['fecha']
+                      }
+
+    except Exception as err:
+        app.logger.error(str(err))
+        app.logger.exception("@Error")
+        errormessage = '*Error Redirecting index: ' + str(err)
+    #
+
+    # logging.info('tem_values=' + repr(tem_values))
+    app.logger.info("---gotoGold ENDS")
+    return render_template('not-avalaible.html', datas=tem_values)
+# fin gotoGold
