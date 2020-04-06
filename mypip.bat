@@ -1,6 +1,5 @@
 echo off
 
-
 call C:\DEV\python372\python --version
 
 call C:\DEV\python372\Scripts\pip --version
