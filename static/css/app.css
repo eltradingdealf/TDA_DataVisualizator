@@ -9,6 +9,7 @@ body {
 }
 .container {
   background: #000;
+  max-width: 1800px;
 }
 
 .jumbotron{
@@ -17,6 +18,10 @@ body {
     background: #85BB65 !important;        
     font-family: 'Dosis', sans-serif !important;
     color: #f3f4b9 !important;    
+}
+
+.card_back_peach {
+background-color: peachpuff;
 }
 
 .myBodyCard {

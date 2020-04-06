@@ -171,7 +171,7 @@ def gotoSp500():
 
     # logging.info('tem_values=' + repr(tem_values))
     app.logger.info("---gotoSp500 ENDS")
-    return render_template('not-avalaible.html', datas=tem_values)
+    return render_template('market-sp500.html', datas=tem_values)
 # fin gotoSp500
 
 
@@ -212,12 +212,12 @@ def gotoNasdaq():
 
     # logging.info('tem_values=' + repr(tem_values))
     app.logger.info("---gotoNasdaq ENDS")
-    return render_template('not-avalaible.html', datas=tem_values)
+    return render_template('market-nasdaq.html', datas=tem_values)
 # fin gotoNasdaq
 
 
 
-@app.route("/etda/web/gold")
+@app.route("/etda/web/cl")
 def gotoGold():
     app.logger.info("---gotoGold INIT")
 
@@ -252,6 +252,6 @@ def gotoGold():
     #
 
     # logging.info('tem_values=' + repr(tem_values))
-    app.logger.info("---gotoGold ENDS")
-    return render_template('not-avalaible.html', datas=tem_values)
+    app.logger.info("---gotoCL ENDS")
+    return render_template('market-cl.html', datas=tem_values)
 # fin gotoGold

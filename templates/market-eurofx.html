@@ -29,7 +29,7 @@
     </form>
 
     <!-- CONTAINER -->
-    <div class="container">
+    <div class="container-fluid">
         <!-- HEADER -->
         {% include "inc-header.html" ignore missing %}
         <!-- /HEADER -->
@@ -40,17 +40,23 @@
             <!-- MAIN CONTENT -->
             <div class="col md-12">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         {% include "market-eurofx-card-data01.html" ignore missing %}
                     </div>
 
+                    <div class="col-md-6">
+                        {% include "market-eurofx-card-data01.html" ignore missing %}
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-12">
-                        <div id="btnGotoFibexPage" class="d-flex justify-content-end btnFootCard">
+                        <div id="btnGotoIndexPage" class="d-flex justify-content-center btnFootCard">
                             <a href="{{datas.domain}}/etda/web/" class="btn btn-danger">Back to Home</a>
                         </div>
                     </div>
-
                 </div>
+
             </div>
             <!-- /MAIN CONTENT -->
 
