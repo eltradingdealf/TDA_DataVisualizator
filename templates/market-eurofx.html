@@ -41,13 +41,24 @@
             <div class="col md-12">
                 <div class="row">
                     <div class="col-md-6">
-                        {% include "market-eurofx-card-data01.html" ignore missing %}
+                        {% include "eurofx/market-eurofx-card-graph01.html" ignore missing %}
                     </div>
 
                     <div class="col-md-6">
-                        {% include "market-eurofx-card-data01.html" ignore missing %}
+                        {% include "eurofx/market-eurofx-card-graph02.html" ignore missing %}
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {% include "eurofx/market-eurofx-card-data01.html" ignore missing %}
+                    </div>
+
+                    <div class="col-md-6">
+                        {% include "eurofx/market-eurofx-card-graph03.html" ignore missing %}
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="col-md-12">
@@ -75,6 +86,8 @@
     <script src="{{datas.domain}}/static/js/bootstrap.min.js"></script>
     <script src="{{datas.domain}}/static/js/ie10-viewport-bug-workaround.js"></script>
     <script src="{{datas.domain}}/static/js/app.js"></script>
+    <script src="{{datas.domain}}/static/js/Chart.bundle.min.js"></script><!--https://www.chartjs.org/-->
+
 
     <script>
         var mobile = '-';

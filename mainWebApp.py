@@ -12,6 +12,7 @@ import common
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 logging.basicConfig(filename='/logs/etda_datavisu.log', level=logging.DEBUG)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
@@ -218,8 +219,8 @@ def gotoNasdaq():
 
 
 @app.route("/etda/web/cl")
-def gotoGold():
-    app.logger.info("---gotoGold INIT")
+def gotoCL():
+    app.logger.info("---gotoCL INIT")
 
     errormessage = '0'
     tem_values = {}
@@ -254,4 +255,6 @@ def gotoGold():
     # logging.info('tem_values=' + repr(tem_values))
     app.logger.info("---gotoCL ENDS")
     return render_template('market-cl.html', datas=tem_values)
-# fin gotoGold
+# fin gotoCL
+
+

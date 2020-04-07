@@ -34,6 +34,10 @@ background-color: peachpuff;
   color: #FFF;
 }
 
+.table-card {
+    color: white;
+}
+
 .h1_card-header {
   font-size: 1.1em;
   margin-bottom: 0em;
@@ -75,5 +79,5 @@ background-color: peachpuff;
     margin-top: 0;
     font-size: 1em;
     font-weight: 500;
-    color: black;
+    color: #FFF;
 }
