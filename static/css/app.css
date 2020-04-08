@@ -1,0 +1,83 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  background: #000;
+}
+.container {
+  background: #000;
+  max-width: 1800px;
+}
+
+.jumbotron{
+    margin-top: 0px;
+    padding: 17px;
+    background: #85BB65 !important;        
+    font-family: 'Dosis', sans-serif !important;
+    color: #f3f4b9 !important;    
+}
+
+.card_back_peach {
+background-color: peachpuff;
+}
+
+.myBodyCard {
+  padding-top: 0.1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  font-size: .95em;
+  background-color: #000;
+  color: #FFF;
+}
+
+.table-card {
+    color: white;
+}
+
+.h1_card-header {
+  font-size: 1.1em;
+  margin-bottom: 0em;
+}
+
+.myCardBlock {
+    padding: 1.25rem;
+}
+
+.span_table_bottom {
+    font-size: .9em;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.myScriptCard {
+    background: #c1e4cf;
+    padding: .2rem .1rem .3rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #111;
+}
+
+.myHeaderCard {
+    background: #116699;
+    padding: .2rem .1rem .3rem 1.5rem;
+    margin-bottom:.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #FFF;
+}
+
+.myTableTitleHeader {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    background-color: rgba(129, 153, 243, 0.59); /*rgba(205, 213, 243, 0.59);*/
+    padding: .4rem 1.25rem;
+    margin-top: 0;
+    font-size: 1em;
+    font-weight: 500;
+    color: #FFF;
+}

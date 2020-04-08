@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Data Visualizator</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Welcome to me.">
+    <meta name="author" content="Alfredo Sanz | https://github.com/AlfredoSanz-Indra">
+    <link rel="icon" href="../favicon.ico">
+    
+     <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    
+    {% include "inc-import-css.html" ignore missing %}
+        
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    
+</head>
+
+<!-- BEGIN BODY -->
+<body>
+    <form id="mainform">
+        <input type="hidden" id="mydomain" value="{{datas.domain}}"/>
+    </form>
+
+
+     <!-- /CONTAINER -->
+    <div class="container-fluid">
+
+        <!-- HEADER -->
+        {% include "inc-header.html" ignore missing %}
+        <!-- /HEADER -->
+
+        <!-- MAIN BODY-->
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- MAIN CONTENT -->
+                <div class="card card_back_peach">
+                    <div class="card-body">
+                        <h5 class="card-title">Markets Avalaibles</h5>
+                        <table class="table table-borderless table-hover">
+                            <tbody>
+                                <tr>
+                                    <td><a href="/etda/web/eurofx" class="btn btn-primary">Euro FX</a></td>
+                                    <td><a href="/etda/web/sp500" class="btn btn-info">S&P 500</a></td>
+                                    <td><a href="/etda/web/nasdaq" class="btn btn-info">Nasdaq 100</a></td>
+                                    <td><a href="/etda/web/cl" class="btn btn-info">CL</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- /MAIN CONTENT -->
+            </div>
+        </div>
+        <!-- /MAIN BODY-->
+
+        <!-- FOOTER -->
+        {% include "inc-footer.html" ignore missing %}
+        <!-- /FOOTER -->
+
+    </div>
+    <!-- /CONTAINER -->
+
+    <!-- GLOBAL SCRIPTS -->
+    <script src="{{datas.domain}}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{datas.domain}}/static/js/tether.min.js"></script>
+    <script src="{{datas.domain}}/static/js/bootstrap.min.js"></script>
+    <script src="{{datas.domain}}/static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{datas.domain}}/static/js/app.js"></script>
+    
+    <script>
+        var mobile = '-';
+        var domain = '{{datas.domain}}';
+
+        $(document).ready(function() {
+
+            const mydomain = $('#mainform #mydomain').val();
+
+            console.log(mydomain);
+            
+            
+        });//fin ready
+    </script>
+
+    
+
+    
+</body>
+<!-- END BODY -->
+
+ <!-- GLOBAL SCRIPTS -->
+    <script src="{{datas.domain}}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{datas.domain}}/static/js/tether.min.js"></script>
+    <script src="{{datas.domain}}/static/js/bootstrap.min.js"></script>
+    <script src="{{datas.domain}}/static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{datas.domain}}/static/js/app.js"></script>
+
+    <script>
+        var mobile = '-';
+        var domain = '{{datas.domain}}';
+
+        $(document).ready(function() {
+
+            const mydomain = $('#mainform #mydomain').val();
+
+            console.log(mydomain);
+
+
+        });//fin ready
+    </script>
+
+</html>
