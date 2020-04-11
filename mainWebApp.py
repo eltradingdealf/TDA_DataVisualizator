@@ -33,7 +33,11 @@ api = Api(app)
 # *******************************************************
 api_routes = [
     {
-        'route': u'/etda/api/v1/alive',
+        'route': u'/etda/ajx/sessionName',
+        'methods': u'GET'
+    },
+    {
+        'route': u'/etda/ajx/eurofx/globaldata',
         'methods': u'GET'
     }
 ]
@@ -137,6 +141,51 @@ def gotoEurofx():
     app.logger.info("---gotoEurofx ENDS")
     return render_template('market-eurofx.html', datas=tem_values)
 # fin gotoEurofx
+
+
+@app.route('/etda/ajx/sessionName', methods=['GET'])
+def getSessionName():
+    app.logger.debug("---ajx GET getSessionName INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = Eurofx_RTController()
+
+        thetime = controller.getTheTime()
+        tem_values['fecha'] = thetime['strFecha']
+        tem_values['sessionName'] = controller.getSessionName()
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getSessionName ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getSessionName
+
+
+@app.route('/etda/ajx/eurofx/globaldata', methods=['GET'])
+def getEurofxGlobaldata():
+    app.logger.debug("---ajx GET getEurofxGlobaldata INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = Eurofx_RTController()
+
+        result = controller.getGlobalData(request)
+        tem_values.update(result)
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getEurofxGlobaldata ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getSessionName
 
 
 

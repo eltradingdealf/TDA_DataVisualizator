@@ -14,7 +14,7 @@ import time
 
 # local imports
 from common import Util
-from common import Constantes
+from dao.RT_Dao import RT_Dao
 
 
 class RT_Service:
@@ -42,4 +42,17 @@ class RT_Service:
         self.log.debug('RT_Service - getTheSessionName ENDS')
         return thetime['intDate']
     #
+
+
+    def getGlobalData(self, _market, _sessionName):
+        self.log.debug('RT_Service - getGlobalData INIT')
+
+        errormessage = '0'
+
+        dao = RT_Dao()
+        errormessage, result = dao.getGlobaldata(_sessionName, _market)
+
+        self.log.debug('RT_Service - getGlobalData ENDS')
+        return errormessage, result
+    #fin getGlobalData
 #
