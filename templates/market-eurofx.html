@@ -90,14 +90,16 @@
 
 
     <script>
-        var mobile = '-';
         var domain = '{{datas.domain}}';
+        var fecha = '{{datas.fecha}}';
+        var sessionName = '{{datas.sessionName}}'
+
 
         $(document).ready(function() {
 
             const mydomain = $('#mainform #mydomain').val();
 
-            console.log(mydomain);
+            console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
 
         });//fin ready

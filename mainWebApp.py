@@ -4,16 +4,19 @@
     @author Alfredo Sanz
     @date Dec 2019
 """
-from flask import Flask, render_template, request, jsonify, Response
-from flask_restful import Api
-from flask_cors import CORS, cross_origin
 import logging
-import common
+
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
+from flask_restful import Api
+
+#propios
+from controller.Eurofx_RTController import Eurofx_RTController
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-logging.basicConfig(filename='/logs/etda_datavisu.log', level=logging.DEBUG)
+logging.basicConfig(filename='Python_VISUALIZATOR.log', level=logging.DEBUG)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # *******************************************************
@@ -108,10 +111,11 @@ def gotoEurofx():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = Eurofx_RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -119,9 +123,9 @@ def gotoEurofx():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
