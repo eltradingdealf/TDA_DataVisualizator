@@ -4,16 +4,19 @@
     @author Alfredo Sanz
     @date Dec 2019
 """
-from flask import Flask, render_template, request, jsonify, Response
-from flask_restful import Api
-from flask_cors import CORS, cross_origin
 import logging
-import common
+
+from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
+from flask_restful import Api
+
+#propios
+from controller.Eurofx_RTController import Eurofx_RTController
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-logging.basicConfig(filename='/logs/etda_datavisu.log', level=logging.DEBUG)
+logging.basicConfig(filename='Python_VISUALIZATOR.log', level=logging.DEBUG)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # *******************************************************
@@ -30,7 +33,11 @@ api = Api(app)
 # *******************************************************
 api_routes = [
     {
-        'route': u'/etda/api/v1/alive',
+        'route': u'/etda/ajx/sessionName',
+        'methods': u'GET'
+    },
+    {
+        'route': u'/etda/ajx/eurofx/globaldata',
         'methods': u'GET'
     }
 ]
@@ -108,10 +115,11 @@ def gotoEurofx():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = Eurofx_RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -119,9 +127,9 @@ def gotoEurofx():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
@@ -133,6 +141,51 @@ def gotoEurofx():
     app.logger.info("---gotoEurofx ENDS")
     return render_template('market-eurofx.html', datas=tem_values)
 # fin gotoEurofx
+
+
+@app.route('/etda/ajx/sessionName', methods=['GET'])
+def getSessionName():
+    app.logger.debug("---ajx GET getSessionName INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = Eurofx_RTController()
+
+        thetime = controller.getTheTime()
+        tem_values['fecha'] = thetime['strFecha']
+        tem_values['sessionName'] = controller.getSessionName()
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getSessionName ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getSessionName
+
+
+@app.route('/etda/ajx/eurofx/globaldata', methods=['GET'])
+def getEurofxGlobaldata():
+    app.logger.debug("---ajx GET getEurofxGlobaldata INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = Eurofx_RTController()
+
+        result = controller.getGlobalData(request)
+        tem_values.update(result)
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getEurofxGlobaldata ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getSessionName
 
 
 

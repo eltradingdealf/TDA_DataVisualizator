@@ -90,16 +90,18 @@
 
 
     <script>
-        var mobile = '-';
-        var domain = '{{datas.domain}}';
+        const domain = '{{datas.domain}}';
+        let fecha = '{{datas.fecha}}';
+        let sessionName = '{{datas.sessionName}}';
 
         $(document).ready(function() {
+            //const mydomain = $('#mainform #mydomain').val();
 
-            const mydomain = $('#mainform #mydomain').val();
+            setInterval(function(){loadSessionName(domain);}, 30000 * 10);//5 mins
+            console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
-            console.log(mydomain);
-
-
+            getGlobaldata(domain)
+            setInterval(function(){getGlobaldata(domain);}, 10000);// 1 seg
         });//fin ready
     </script>
 </html>

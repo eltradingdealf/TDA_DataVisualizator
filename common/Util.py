@@ -14,16 +14,7 @@ import string
 import math
 
 # local Imports
-import Consts
-
-
-# Obtiene el nivel de Logging que se ha configurado en el fichero config.cfg
-# Devuelve el valor Entero que corresponde al nivel seleccionado.
-def getAppLogLevel():
-    logLevelDefined = Consts.app_log_level
-    logLevel = Consts.logs_level[logLevelDefined]
-
-    return logLevel
+from common import Constantes
 
 
 # fin getAppLogLevel
@@ -381,9 +372,9 @@ def diffTimes(curTime, lastTime, unit):
     result = 0
 
     try:
-        if Consts.TIME_UNIT_SEC == unit:
+        if Constantes.TIME_UNIT_SEC == unit:
             result = curTime - lastTime
-        elif Consts.TIME_UNIT_MIN == unit:
+        elif Constantes.TIME_UNIT_MIN == unit:
             diff_secs = curTime - lastTime
             diff_mins_float = diff_secs / 60
             result = int(diff_mins_float)  # Nos quedamos con la parte entera, down round.
@@ -397,8 +388,6 @@ def diffTimes(curTime, lastTime, unit):
         result = 0
 
     return result
-
-
 # fin diffTimes
 
 
@@ -420,8 +409,6 @@ def diffTimesMilliseconds(curTime_dtdt, lastTime_dtdt):
         result = 0
 
     return result
-
-
 # fin diffTimesMilliseconds
 
 
