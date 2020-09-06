@@ -54,5 +54,19 @@ class RT_Service:
 
         self.log.debug('RT_Service - getGlobalData ENDS')
         return errormessage, result
-    #fin getGlobalData
+    # fin getGlobalData
+
+
+    def getDeltaValues(self, _market, _lastCandle):
+        self.log.debug('RT_Service - getDeltaValues INIT')
+
+        errormessage = '0'
+
+        dao = RT_Dao()
+        errormessage, result = dao.getDeltaValues(_market, _lastCandle)
+
+        self.log.debug('RT_Service - getDeltaValues ENDS')
+        return errormessage, result
+
+    # fin getDeltavalues
 #

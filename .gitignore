@@ -6,9 +6,8 @@ __pycache__
 /result-files/
 .idea/
 
-ConstsAux.py
-
 # Flask stuff:
 instance/
 .webassets-cache
 
+/ConfigRootAux.py
