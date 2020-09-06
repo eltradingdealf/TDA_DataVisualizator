@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="Welcome to me.">
-    <meta name="author" content="Alfredo Sanz | https://github.com/AlfredoSanz-Indra">
+    <meta name="author" content="Alfredo Sanz | https://github.com/eltradingdealf">
     <link rel="icon" href="../favicon.ico">
 
      <!--[if IE]>
@@ -74,7 +74,6 @@
         </div>
         <!-- /MAIN BODY-->
 
-
     </div>
     <!-- /CONTAINER -->
 
@@ -94,14 +93,29 @@
         let fecha = '{{datas.fecha}}';
         let sessionName = '{{datas.sessionName}}';
 
+        let global_deltas_lastCandle = 0;
+        const global_deltas_list = [];
+
+        let chart_deltas = null;
+
+
         $(document).ready(function() {
             //const mydomain = $('#mainform #mydomain').val();
 
-            setInterval(function(){loadSessionName(domain);}, 30000 * 10);//5 mins
+            //CHARTS
+            defineChart_deltas();
+
+            //INTERVAL
+            setInterval(function(){loadSessionName(domain);}, 60000);   //1 mins
             console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
+            //INTERVAL
             getGlobaldata(domain)
-            setInterval(function(){getGlobaldata(domain);}, 10000);// 1 seg
+            setInterval(function(){getGlobaldata(domain);}, 5000);//0.5seg   //1000);// 1 seg
+
+            //INTERVAL
+            getDeltas(domain)
+            setInterval(function(){getDeltas(domain);}, 5000);//0.5seg   //1000);// 1 seg
         });//fin ready
     </script>
 </html>

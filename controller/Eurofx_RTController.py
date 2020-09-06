@@ -61,5 +61,20 @@ class Eurofx_RTController:
 
         self.log.debug('Eurofx_RTController - getGlobalData ENDS')
         return result
-    #fin getGlobalData
+    # fin getGlobalData
+
+
+    def getDeltas(self, _request):
+        self.log.debug('Eurofx_RTController - getDeltas INIT')
+        errormessage = '0'
+
+        lastCandle = _request.args.get('lastCandle')
+        self.log.debug('lastCandle->' + lastCandle)
+
+        rt_service = RT_Service()
+        errormessage, result = rt_service.getDeltaValues(Constantes.MARKET_EUROFX, lastCandle)
+
+        self.log.debug('Eurofx_RTController - getDeltas ENDS')
+        return result
+    # fin getDeltas
 #

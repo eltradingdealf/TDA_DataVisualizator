@@ -1,13 +1,13 @@
 
 
 function loadSessionName(_mydomain) {
-    console.log('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] INIT');
+    console.debug('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     var params = {};
 
-    console.log('->' + _mydomain + '/etda/ajx/sessionName');
+    console.debug('->' + _mydomain + '/etda/ajx/sessionName');
     $.get(_mydomain + "/etda/ajx/sessionName", params, function(data) {
-        console.log('->loadSessionName-> errormessage= ' + data['serverdata']['errormessage'] + ', session= ' + data['serverdata']['fecha']);
+        console.info('->loadSessionName-> errormessage= ' + data['serverdata']['errormessage'] + ', session= ' + data['serverdata']['fecha']);
         if('0' == data['serverdata']['errormessage']) {
 
             fecha = data['serverdata']['fecha'];
@@ -16,27 +16,27 @@ function loadSessionName(_mydomain) {
             $("#eurofx-cardheader-a").html(fecha);
         }
         else {
-            console.log('->loadSessionName-> Error requesting SessionName data:' + data['serverdata']['errormessage']);
+            console.info('->loadSessionName-> Error requesting SessionName data:' + data['serverdata']['errormessage']);
         }
 
-        console.log('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
+        console.debug('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
     });
 
-    console.log('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] ENDS');
-}//fin loadCardsCurrentDataValues
+    console.debug('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] ENDS');
+}//fin loadSessionName
 
 
 
 function getGlobaldata(_mydomain) {
-    console.log('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] INIT');
+    console.debug('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     var params = {};
     params['sessionName'] = sessionName;
-    console.log('params: ' + JSON.stringify(params));
+    console.debug('params: ' + JSON.stringify(params));
 
-    console.log('->' + _mydomain + '/etda/ajx/eurofx/globaldata');
+    console.debug('->' + _mydomain + '/etda/ajx/eurofx/globaldata');
     $.get(_mydomain + "/etda/ajx/eurofx/globaldata", params, function(data) {
-        console.log('->getGlobaldata-> errormessage= ' + data['serverdata']['errormessage']);
+        console.info('->getGlobaldata-> errormessage= ' + data['serverdata']['errormessage']);
         if('0' == data['serverdata']['errormessage']) {
 
             $("#eurofx-glb-sessionname").html(sessionName);
@@ -45,11 +45,206 @@ function getGlobaldata(_mydomain) {
             $("#eurofx-glb-voltotal").html(data['serverdata']['volume_total']);
         }
         else {
-            console.log('->getGlobaldata-> Error requesting EuroFX global data:' + data['serverdata']['errormessage']);
+            console.info('->getGlobaldata-> Error requesting EuroFX global data:' + data['serverdata']['errormessage']);
         }
 
-        console.log('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
+        console.debug('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
     });
 
-    console.log('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] ENDS');
-}//fin loadCardsCurrentDataValues
+    console.debug('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] ENDS');
+}//fin getGlobaldata
+
+
+
+function getDeltas(_mydomain) {
+    console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] INIT');
+
+    const params = {};
+    params['sessionName'] = sessionName;
+    params['lastCandle'] = global_deltas_lastCandle;
+    console.info('params: ' + JSON.stringify(params));
+
+    console.debug('->' + _mydomain + '/etda/ajx/eurofx/deltas');
+    $.get(_mydomain + "/etda/ajx/eurofx/deltas", params, function(data) {
+        console.info('->getDeltas-> errormessage= ' + data['serverdata']['errormessage']);
+        if('0' == data['serverdata']['errormessage']) {
+
+            const theRecords = data['serverdata']['result'];
+            console.info('getDeltas result length: ' + theRecords.length); //JSON.stringify(data.result));
+
+            const lastRecord = theRecords.slice(-1).pop();
+            console.debug('lastRecord: ' + JSON.stringify(lastRecord));
+            global_deltas_lastCandle = lastRecord['candle_id']
+
+            $("#eurofx-deltas-candle_id").html(lastRecord['candle_id']);
+            $("#eurofx-deltas-delta").html(lastRecord['delta']);
+            $("#eurofx-deltas-vol_avg").html(lastRecord['vol_avg']);
+            $("#eurofx-deltas-delta_strong").html(lastRecord['delta_strong']);
+
+            if(0 != global_deltas_list.length) {
+                global_deltas_list.pop();
+            }
+            global_deltas_list.push(...theRecords);
+
+            const lastRecordGlobal = global_deltas_list.slice(-1).pop();
+            console.debug('lastRecordGlobal: ' + JSON.stringify(lastRecordGlobal));
+
+            //Update the chart
+            updateChart_deltas();
+        }
+        else {
+            console.info('->getDeltas-> Error requesting EuroFX deltas data:' + data['serverdata']['errormessage']);
+        }
+
+        console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
+    });
+
+    console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] ENDS');
+}//fin getDeltas
+
+
+
+function updateChart_deltas() {
+
+    if(0 === chart_deltas.data.datasets[0].data.length) {
+        global_deltas_list.forEach(record => {
+            chart_deltas.data.labels.push(record['candle_id']);
+            chart_deltas.data.datasets[0].data.push(record['delta']);
+            chart_deltas.data.datasets[1].data.push(record['delta_strong']);
+            chart_deltas.data.datasets[2].data.push(record['vol_avg']);
+            chart_deltas.data.datasets[3].data.push(0);
+        });
+    }
+    else {
+        console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
+        while(20 <= chart_deltas.data.datasets[0].data.length) {
+
+            chart_deltas.data.labels.shift();
+            chart_deltas.data.datasets[0].data.shift();
+            chart_deltas.data.datasets[1].data.shift();
+            chart_deltas.data.datasets[2].data.shift();
+            chart_deltas.data.datasets[3].data.shift();
+
+            global_deltas_list.shift();
+        }
+        console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
+        console.info('global_deltas_list.length: ' + global_deltas_list.length);
+
+        const currentIndex = chart_deltas.data.datasets[0].data.length - 1;
+        const newRecords = global_deltas_list.slice(currentIndex)
+
+        chart_deltas.data.labels.pop();
+        chart_deltas.data.datasets[0].data.pop();
+        chart_deltas.data.datasets[1].data.pop();
+        chart_deltas.data.datasets[2].data.pop();
+        chart_deltas.data.datasets[3].data.pop();
+
+        newRecords.forEach(record => {
+            chart_deltas.data.labels.push(record['candle_id']);
+            chart_deltas.data.datasets[0].data.push(record['delta']);
+            chart_deltas.data.datasets[1].data.push(record['delta_strong']);
+            chart_deltas.data.datasets[2].data.push(record['vol_avg']);
+            chart_deltas.data.datasets[3].data.push(0);
+        });
+    }
+
+    chart_deltas.update();
+    console.info('chart_deltas updated');
+}
+
+
+
+//********----CHARTS----************
+
+function defineChart_deltas() {
+
+    var ctx = document.getElementById("chart_deltas");
+    chart_deltas = new Chart(ctx, {
+        type: 'line',
+        data : {
+            labels: [],
+            datasets: [{
+                label: "Delta",
+                data:[],
+                fill: false,
+                borderColor: ['#3333ff'],
+                backgroundColor: ['#3333ff'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "Delta_Strong",
+                data:[],
+                fill: false,
+                borderColor: ['#339933'],
+                backgroundColor: ['#339933'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "Vol_avg",
+                data:[],
+                fill: false,
+                borderColor: ['#ff1a1a'],
+                backgroundColor: ['#ff1a1a'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-2'
+            },
+            {
+                label: "zero line",
+                data:[],
+                fill: false,
+                borderColor: ['#ffffff'],
+                backgroundColor: ['#ffffff'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-2'
+            }]
+        },
+        options:{
+            responsive: true,
+            aspectRatio: 2,
+			hoverMode: 'index',
+			stacked: false,
+			title: {
+				display: true,
+				text: 'Deltas and volume average'
+			},
+            scales: {
+                yAxes: [{
+                        ticks: {
+                            beginAtZero:false,
+                            min:-100,
+                            max:100
+                        },
+                        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: 'left',
+                        stepSize: 5,
+                        id: 'y-axis-1',
+                    },
+                    {
+                        ticks: {
+                            beginAtZero:false,
+                            min:-10,
+                            max:10
+                        },
+                        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        gridLines: {
+                            drawOnChartArea: false, // only want the grid lines for one axis to show up
+                        }
+                    }]
+            }
+        }
+    });
+
+    //chart_deltas.canvas.parentNode.style.height = '200px';
+    //chart_deltas.canvas.parentNode.style.width = '400px';
+
+}//fin defineChart_deltas
