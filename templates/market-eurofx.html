@@ -95,15 +95,18 @@
 
         let global_deltas_lastCandle = 0;
         const global_deltas_list = [];
+        let global_deltas_list_last_length = 1;
 
         let chart_deltas = null;
+        const CHART_DELTAS_X_AXIS_LENGTH = 20;
 
 
         $(document).ready(function() {
             //const mydomain = $('#mainform #mydomain').val();
 
-            //CHARTS
+            //CHART
             defineChart_deltas();
+            initChartDataset_deltas();
 
             //INTERVAL
             setInterval(function(){loadSessionName(domain);}, 60000);   //1 mins

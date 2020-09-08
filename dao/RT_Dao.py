@@ -119,7 +119,8 @@ class RT_Dao():
                         'candle_id': row['candle_id'],
                         'delta': row['delta'],
                         'vol_avg': row['vol_avg'],
-                        'delta_strong': row['delta_strong']
+                        'delta_strong': row['delta_strong'],
+                        'delta_period': row['data03']
                         }
 
                     result.append(record)

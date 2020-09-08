@@ -80,6 +80,7 @@ function getDeltas(_mydomain) {
             $("#eurofx-deltas-delta").html(lastRecord['delta']);
             $("#eurofx-deltas-vol_avg").html(lastRecord['vol_avg']);
             $("#eurofx-deltas-delta_strong").html(lastRecord['delta_strong']);
+            $("#eurofx-deltas-delta_p1").html(lastRecord['delta_period']);
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
@@ -103,50 +104,58 @@ function getDeltas(_mydomain) {
 }//fin getDeltas
 
 
+/**
+* js: shift() elimina el primer elemento del array y lo retorna
+* js: slice() devuelve una copia de una parte del array dentro de un nuevo array empezando por inicio hasta fin (fin no incluido). El array original no se modificará.
+* js: pop() elimina el último elemento de un array y lo devuelve
+* js: push() añade uno o más elementos al final de un array y devuelve la nueva longitud del array
+*/
 
 function updateChart_deltas() {
 
-    if(0 === chart_deltas.data.datasets[0].data.length) {
-        global_deltas_list.forEach(record => {
-            chart_deltas.data.labels.push(record['candle_id']);
-            chart_deltas.data.datasets[0].data.push(record['delta']);
-            chart_deltas.data.datasets[1].data.push(record['delta_strong']);
-            chart_deltas.data.datasets[2].data.push(record['vol_avg']);
-            chart_deltas.data.datasets[3].data.push(0);
-        });
+    console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
+    console.info('global_deltas_list.length (1): ' + global_deltas_list.length);
+    console.info('global_deltas_list_last_length (1): ' + global_deltas_list_last_length);
+
+    let currentIndex = -1;
+    if(global_deltas_list.length > global_deltas_list_last_length) {
+        currentIndex = ((global_deltas_list.length - global_deltas_list_last_length) * -1) - 1;
     }
-    else {
-        console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
-        while(20 <= chart_deltas.data.datasets[0].data.length) {
+    global_deltas_list_last_length = global_deltas_list.length;
+    console.info('global_deltas_list_last_length (2): ' + global_deltas_list_last_length);
 
-            chart_deltas.data.labels.shift();
-            chart_deltas.data.datasets[0].data.shift();
-            chart_deltas.data.datasets[1].data.shift();
-            chart_deltas.data.datasets[2].data.shift();
-            chart_deltas.data.datasets[3].data.shift();
-
-            global_deltas_list.shift();
-        }
-        console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
-        console.info('global_deltas_list.length: ' + global_deltas_list.length);
-
-        const currentIndex = chart_deltas.data.datasets[0].data.length - 1;
-        const newRecords = global_deltas_list.slice(currentIndex)
-
-        chart_deltas.data.labels.pop();
-        chart_deltas.data.datasets[0].data.pop();
-        chart_deltas.data.datasets[1].data.pop();
-        chart_deltas.data.datasets[2].data.pop();
-        chart_deltas.data.datasets[3].data.pop();
-
-        newRecords.forEach(record => {
-            chart_deltas.data.labels.push(record['candle_id']);
-            chart_deltas.data.datasets[0].data.push(record['delta']);
-            chart_deltas.data.datasets[1].data.push(record['delta_strong']);
-            chart_deltas.data.datasets[2].data.push(record['vol_avg']);
-            chart_deltas.data.datasets[3].data.push(0);
-        });
+    while(CHART_DELTAS_X_AXIS_LENGTH <= chart_deltas.data.datasets[0].data.length) {
+        console.info('shift');
+        chart_deltas.data.labels.shift();
+        chart_deltas.data.datasets[0].data.shift();
+        chart_deltas.data.datasets[1].data.shift();
+        chart_deltas.data.datasets[2].data.shift();
+        chart_deltas.data.datasets[3].data.shift();
+        chart_deltas.data.datasets[4].data.shift();
     }
+
+    console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
+    console.info('currentIndex: ' + currentIndex);
+
+    const newRecords = global_deltas_list.slice(currentIndex);
+    console.info('newRecords: ' + JSON.stringify(newRecords));
+
+    chart_deltas.data.labels.pop();
+    chart_deltas.data.datasets[0].data.pop();
+    chart_deltas.data.datasets[1].data.pop();
+    chart_deltas.data.datasets[2].data.pop();
+    chart_deltas.data.datasets[3].data.pop();
+    chart_deltas.data.datasets[4].data.pop();
+
+    newRecords.forEach(record => {
+        chart_deltas.data.labels.push(record['candle_id']);
+        chart_deltas.data.datasets[0].data.push(record['delta']);
+        chart_deltas.data.datasets[1].data.push(record['delta_period']);
+        chart_deltas.data.datasets[2].data.push(record['delta_strong']);
+        chart_deltas.data.datasets[3].data.push(record['vol_avg']);
+        chart_deltas.data.datasets[4].data.push(0);
+    });
+
 
     chart_deltas.update();
     console.info('chart_deltas updated');
@@ -174,11 +183,21 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
+                label: "Delta_P=1",
+                data:[],
+                fill: false,
+                borderColor: ['#00ff00'],
+                backgroundColor: ['#00ff00'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
                 label: "Delta_Strong",
                 data:[],
                 fill: false,
-                borderColor: ['#339933'],
-                backgroundColor: ['#339933'],
+                borderColor: ['#ffffff'],
+                backgroundColor: ['#ffffff'],
                 borderWidth: 1,
                 pointRadius: 0,
                 yAxisID: 'y-axis-1'
@@ -248,3 +267,17 @@ function defineChart_deltas() {
     //chart_deltas.canvas.parentNode.style.width = '400px';
 
 }//fin defineChart_deltas
+
+
+
+function initChartDataset_deltas() {
+
+    for(x = 0; x < CHART_DELTAS_X_AXIS_LENGTH; x++) {
+        chart_deltas.data.labels.push(0);
+        chart_deltas.data.datasets[0].data.push(0);
+        chart_deltas.data.datasets[1].data.push(0);
+        chart_deltas.data.datasets[2].data.push(0);
+        chart_deltas.data.datasets[3].data.push(0);
+        chart_deltas.data.datasets[4].data.push(0);
+    }
+}
