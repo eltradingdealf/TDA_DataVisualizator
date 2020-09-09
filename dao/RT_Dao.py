@@ -120,8 +120,9 @@ class RT_Dao():
                         'delta': row['delta'],
                         'vol_avg': row['vol_avg'],
                         'delta_strong': row['delta_strong'],
-                        'delta_period': row['data03']
-                        }
+                        'delta_period': row['data03'],
+                        'vol_filtered': row['data04']
+                    }
 
                     result.append(record)
                 #

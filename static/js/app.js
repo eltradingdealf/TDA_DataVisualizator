@@ -36,7 +36,7 @@ function getGlobaldata(_mydomain) {
 
     console.debug('->' + _mydomain + '/etda/ajx/eurofx/globaldata');
     $.get(_mydomain + "/etda/ajx/eurofx/globaldata", params, function(data) {
-        console.info('->getGlobaldata-> errormessage= ' + data['serverdata']['errormessage']);
+        console.debug('->getGlobaldata-> errormessage= ' + data['serverdata']['errormessage']);
         if('0' == data['serverdata']['errormessage']) {
 
             $("#eurofx-glb-sessionname").html(sessionName);
@@ -62,11 +62,11 @@ function getDeltas(_mydomain) {
     const params = {};
     params['sessionName'] = sessionName;
     params['lastCandle'] = global_deltas_lastCandle;
-    console.info('params: ' + JSON.stringify(params));
+    console.debug('params: ' + JSON.stringify(params));
 
     console.debug('->' + _mydomain + '/etda/ajx/eurofx/deltas');
     $.get(_mydomain + "/etda/ajx/eurofx/deltas", params, function(data) {
-        console.info('->getDeltas-> errormessage= ' + data['serverdata']['errormessage']);
+        console.debug('->getDeltas-> errormessage= ' + data['serverdata']['errormessage']);
         if('0' == data['serverdata']['errormessage']) {
 
             const theRecords = data['serverdata']['result'];
@@ -81,6 +81,7 @@ function getDeltas(_mydomain) {
             $("#eurofx-deltas-vol_avg").html(lastRecord['vol_avg']);
             $("#eurofx-deltas-delta_strong").html(lastRecord['delta_strong']);
             $("#eurofx-deltas-delta_p1").html(lastRecord['delta_period']);
+            $("#eurofx-deltas-vol-filtered").html(lastRecord['vol_filtered']);
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
@@ -113,16 +114,11 @@ function getDeltas(_mydomain) {
 
 function updateChart_deltas() {
 
-    console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
-    console.info('global_deltas_list.length (1): ' + global_deltas_list.length);
-    console.info('global_deltas_list_last_length (1): ' + global_deltas_list_last_length);
-
     let currentIndex = -1;
     if(global_deltas_list.length > global_deltas_list_last_length) {
         currentIndex = ((global_deltas_list.length - global_deltas_list_last_length) * -1) - 1;
     }
     global_deltas_list_last_length = global_deltas_list.length;
-    console.info('global_deltas_list_last_length (2): ' + global_deltas_list_last_length);
 
     while(CHART_DELTAS_X_AXIS_LENGTH <= chart_deltas.data.datasets[0].data.length) {
         console.info('shift');
@@ -131,34 +127,30 @@ function updateChart_deltas() {
         chart_deltas.data.datasets[1].data.shift();
         chart_deltas.data.datasets[2].data.shift();
         chart_deltas.data.datasets[3].data.shift();
-        chart_deltas.data.datasets[4].data.shift();
     }
 
     console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
     console.info('currentIndex: ' + currentIndex);
 
     const newRecords = global_deltas_list.slice(currentIndex);
-    console.info('newRecords: ' + JSON.stringify(newRecords));
 
     chart_deltas.data.labels.pop();
     chart_deltas.data.datasets[0].data.pop();
     chart_deltas.data.datasets[1].data.pop();
     chart_deltas.data.datasets[2].data.pop();
     chart_deltas.data.datasets[3].data.pop();
-    chart_deltas.data.datasets[4].data.pop();
 
     newRecords.forEach(record => {
         chart_deltas.data.labels.push(record['candle_id']);
         chart_deltas.data.datasets[0].data.push(record['delta']);
         chart_deltas.data.datasets[1].data.push(record['delta_period']);
-        chart_deltas.data.datasets[2].data.push(record['delta_strong']);
-        chart_deltas.data.datasets[3].data.push(record['vol_avg']);
-        chart_deltas.data.datasets[4].data.push(0);
+        chart_deltas.data.datasets[2].data.push(record['vol_filtered']);
+        chart_deltas.data.datasets[3].data.push(0);
     });
 
 
     chart_deltas.update();
-    console.info('chart_deltas updated');
+    console.debug('chart_deltas updated');
 }
 
 
@@ -193,17 +185,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Delta_Strong",
-                data:[],
-                fill: false,
-                borderColor: ['#ffffff'],
-                backgroundColor: ['#ffffff'],
-                borderWidth: 1,
-                pointRadius: 0,
-                yAxisID: 'y-axis-1'
-            },
-            {
-                label: "Vol_avg",
+                label: "Vol_Filtered",
                 data:[],
                 fill: false,
                 borderColor: ['#ff1a1a'],
@@ -220,7 +202,7 @@ function defineChart_deltas() {
                 backgroundColor: ['#ffffff'],
                 borderWidth: 1,
                 pointRadius: 0,
-                yAxisID: 'y-axis-2'
+                yAxisID: 'y-axis-1'
             }]
         },
         options:{
@@ -248,8 +230,8 @@ function defineChart_deltas() {
                     {
                         ticks: {
                             beginAtZero:false,
-                            min:-10,
-                            max:10
+                            min:0,
+                            max:100
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -272,12 +254,11 @@ function defineChart_deltas() {
 
 function initChartDataset_deltas() {
 
-    for(x = 0; x < CHART_DELTAS_X_AXIS_LENGTH; x++) {
+    for(x = 0; x <= CHART_DELTAS_X_AXIS_LENGTH; x++) {
         chart_deltas.data.labels.push(0);
         chart_deltas.data.datasets[0].data.push(0);
         chart_deltas.data.datasets[1].data.push(0);
         chart_deltas.data.datasets[2].data.push(0);
         chart_deltas.data.datasets[3].data.push(0);
-        chart_deltas.data.datasets[4].data.push(0);
     }
 }
