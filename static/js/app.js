@@ -127,6 +127,7 @@ function updateChart_deltas() {
         chart_deltas.data.datasets[1].data.shift();
         chart_deltas.data.datasets[2].data.shift();
         chart_deltas.data.datasets[3].data.shift();
+        chart_deltas.data.datasets[4].data.shift();
     }
 
     console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
@@ -139,16 +140,19 @@ function updateChart_deltas() {
     chart_deltas.data.datasets[1].data.pop();
     chart_deltas.data.datasets[2].data.pop();
     chart_deltas.data.datasets[3].data.pop();
+    chart_deltas.data.datasets[4].data.pop();
 
     newRecords.forEach(record => {
         chart_deltas.data.labels.push(record['candle_id']);
-        chart_deltas.data.datasets[0].data.push(record['delta']);
-        chart_deltas.data.datasets[1].data.push(record['delta_period']);
-        chart_deltas.data.datasets[2].data.push(record['vol_filtered']);
+        chart_deltas.data.datasets[0].data.push(parseFloat(record['delta']));
+        chart_deltas.data.datasets[1].data.push(parseFloat(record['delta_period']));
+        chart_deltas.data.datasets[2].data.push(parseInt(record['vol_filtered']));
         chart_deltas.data.datasets[3].data.push(0);
+        chart_deltas.data.datasets[4].data.push(50);
     });
 
-
+    console.info('delta_period: ' + JSON.stringify(chart_deltas.data.datasets[1].data));
+    console.info('vol_filtered: ' + JSON.stringify(chart_deltas.data.datasets[2].data));
     chart_deltas.update();
     console.debug('chart_deltas updated');
 }
@@ -175,7 +179,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Delta_P=1",
+                label: "Delta Pe = 1",
                 data:[],
                 fill: false,
                 borderColor: ['#00ff00'],
@@ -185,14 +189,13 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Vol_Filtered",
+                label: "Vol >= 10",
                 data:[],
-                fill: false,
                 borderColor: ['#ff1a1a'],
                 backgroundColor: ['#ff1a1a'],
                 borderWidth: 1,
-                pointRadius: 0,
-                yAxisID: 'y-axis-2'
+                barPercentage: 0.4,
+                yAxisID: 'y-axis-2',
             },
             {
                 label: "zero line",
@@ -202,6 +205,17 @@ function defineChart_deltas() {
                 backgroundColor: ['#ffffff'],
                 borderWidth: 1,
                 pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "50 line",
+                data:[],
+                fill: false,
+                borderColor: ['#99ffb3'],
+                backgroundColor: ['#99ffb3'],
+                borderWidth: 1,
+                pointRadius: 0,
+                borderDash: [10, 10],
                 yAxisID: 'y-axis-1'
             }]
         },
@@ -260,5 +274,6 @@ function initChartDataset_deltas() {
         chart_deltas.data.datasets[1].data.push(0);
         chart_deltas.data.datasets[2].data.push(0);
         chart_deltas.data.datasets[3].data.push(0);
+        chart_deltas.data.datasets[4].data.push(0);
     }
 }
