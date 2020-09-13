@@ -40,7 +40,9 @@ background-color: peachpuff;
 
 .h1_card-header {
   font-size: 1.1em;
-  margin-bottom: 0em;
+  margin-bottom: 0-5rem;
+  margin-top: 0.5rem;
+  height: 20px;
 }
 
 .myCardBlock {

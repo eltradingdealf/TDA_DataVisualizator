@@ -4,7 +4,7 @@
 
 
     @author Alfredo Sanz
-    @date April 2020
+    @date Sept 2020
 """
 # APIs imports
 import logging
@@ -55,9 +55,11 @@ class RTController:
 
         sessionName = _request.args.get('sessionName')
         self.log.debug('sessionName->' + sessionName)
+        market = _request.args.get('market')
+        self.log.debug('market->' + market)
 
         rt_service = RT_Service()
-        errormessage, result = rt_service.getGlobalData(Constantes.MARKET_EUROFX, sessionName)
+        errormessage, result = rt_service.getGlobalData(market, sessionName)
 
         self.log.debug('RTController - getGlobalData ENDS')
         return result
@@ -68,11 +70,13 @@ class RTController:
         self.log.debug('RTController - getDeltas INIT')
         errormessage = '0'
 
+        market = _request.args.get('market')
+        self.log.debug('market->' + market)
         lastCandle = _request.args.get('lastCandle')
         self.log.debug('lastCandle->' + lastCandle)
 
         rt_service = RT_Service()
-        errormessage, result = rt_service.getDeltaValues(Constantes.MARKET_EUROFX, lastCandle)
+        errormessage, result = rt_service.getDeltaValues(market, lastCandle)
 
         self.log.debug('RTController - getDeltas ENDS')
         return result

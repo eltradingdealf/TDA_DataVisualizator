@@ -3,6 +3,7 @@
 
     @author Alfredo Sanz
     @date Dec 2019
+    @update Sept 2020
 """
 import logging
 
@@ -11,7 +12,7 @@ from flask_cors import CORS
 from flask_restful import Api
 
 #propios
-from controller.Eurofx_RTController import Eurofx_RTController
+from controller.RTController import RTController
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -37,11 +38,11 @@ api_routes = [
         'methods': u'GET'
     },
     {
-        'route': u'/etda/ajx/eurofx/globaldata',
+        'route': u'/etda/ajx/globaldata',
         'methods': u'GET'
     },
     {
-        'route': u'/etda/ajx/eurofx/deltas',
+        'route': u'/etda/ajx/deltas',
         'methods': u'GET'
     }
 ]
@@ -119,7 +120,7 @@ def gotoEurofx():
 
         # Call to Controller
         try:
-            controller = Eurofx_RTController()
+            controller = RTController()
             thetime = controller.getTheTime()
 
             resultData['fecha'] = thetime['strFecha']
@@ -148,76 +149,6 @@ def gotoEurofx():
 
 
 
-@app.route('/etda/ajx/sessionName', methods=['GET'])
-def getSessionName():
-    app.logger.debug("---ajx GET getSessionName INIT")
-
-    tem_values = {'errormessage': '0'}
-
-    try:
-        controller = Eurofx_RTController()
-
-        thetime = controller.getTheTime()
-        tem_values['fecha'] = thetime['strFecha']
-        tem_values['sessionName'] = controller.getSessionName()
-
-    except Exception as Argument:
-        app.logger.error(repr(Argument))
-        app.logger.exception("@Error")
-        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
-
-    app.logger.debug("---ajx GET getSessionName ENDS")
-    return jsonify({'serverdata': tem_values})
-# fin getSessionName
-
-
-
-@app.route('/etda/ajx/eurofx/globaldata', methods=['GET'])
-def getEurofxGlobaldata():
-    app.logger.debug("---ajx GET getEurofxGlobaldata INIT")
-
-    tem_values = {'errormessage': '0'}
-
-    try:
-        controller = Eurofx_RTController()
-
-        result = controller.getGlobalData(request)
-        tem_values.update(result)
-
-    except Exception as Argument:
-        app.logger.error(repr(Argument))
-        app.logger.exception("@Error")
-        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
-
-    app.logger.debug("---ajx GET getEurofxGlobaldata ENDS")
-    return jsonify({'serverdata': tem_values})
-# fin getEurofxGlobaldata
-
-
-
-@app.route('/etda/ajx/eurofx/deltas', methods=['GET'])
-def getEurofxDeltas():
-    app.logger.debug("---ajx GET getEurofxDeltas INIT")
-
-    tem_values = {'errormessage': '0'}
-
-    try:
-        controller = Eurofx_RTController()
-
-        result = controller.getDeltas(request)
-        tem_values['result'] = result
-
-    except Exception as Argument:
-        app.logger.error(repr(Argument))
-        app.logger.exception("@Error")
-        tem_values['errormessage'] = '*Error Ajx GET getEurofxDeltas: ' + repr(Argument)
-
-    app.logger.debug("---ajx GET getEurofxDeltas ENDS")
-    return jsonify({'serverdata': tem_values})
-# fin getEurofxDeltas
-
-
-
 @app.route("/etda/web/sp500")
 def gotoSp500():
     app.logger.info("---gotoSp500 INIT")
@@ -231,10 +162,11 @@ def gotoSp500():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -242,9 +174,9 @@ def gotoSp500():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
@@ -272,10 +204,11 @@ def gotoNasdaq():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -283,9 +216,9 @@ def gotoNasdaq():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
@@ -313,10 +246,11 @@ def gotoCL():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -324,9 +258,9 @@ def gotoCL():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
@@ -353,10 +287,11 @@ def gotoDAX():
 
         # Call to Controller
         try:
-            # controller = Mainpage_Controller()
-            # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
+            controller = RTController()
+            thetime = controller.getTheTime()
 
-            resultData['fecha'] = "20-01-2020"
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
 
         except Exception as err:
             app.logger.error(str(err))
@@ -364,9 +299,9 @@ def gotoDAX():
         #
 
         tem_values = {'errormessage': errormessage,
-                      'domain': request.url_root[:-1],  # quita la barra final
-                      'fecha': resultData['fecha']
+                      'domain': request.url_root[:-1]  # quita la barra final
                       }
+        tem_values.update(resultData)
 
     except Exception as err:
         app.logger.error(str(err))
@@ -378,5 +313,78 @@ def gotoDAX():
     app.logger.info("---gotoDAX ENDS")
     return render_template('market-dax.html', datas=tem_values)
 # fin gotoDAX
+
+
+
+@app.route('/etda/ajx/sessionName', methods=['GET'])
+def getSessionName():
+    app.logger.debug("---ajx GET getSessionName INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = RTController()
+
+        thetime = controller.getTheTime()
+        tem_values['fecha'] = thetime['strFecha']
+        tem_values['sessionName'] = controller.getSessionName()
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getSessionName ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getSessionName
+
+
+
+@app.route('/etda/ajx/globaldata', methods=['GET'])
+def getGlobaldata():
+    app.logger.debug("---ajx GET getGlobaldata INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = RTController()
+
+        result = controller.getGlobalData(request)
+        tem_values.update(result)
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getSessionName: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getGlobaldata ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getGlobaldata
+
+
+
+@app.route('/etda/ajx/deltas', methods=['GET'])
+def getDeltas():
+    app.logger.debug("---ajx GET getDeltas INIT")
+
+    tem_values = {'errormessage': '0'}
+
+    try:
+        controller = RTController()
+
+        result = controller.getDeltas(request)
+        tem_values['result'] = result
+
+    except Exception as Argument:
+        app.logger.error(repr(Argument))
+        app.logger.exception("@Error")
+        tem_values['errormessage'] = '*Error Ajx GET getDeltas: ' + repr(Argument)
+
+    app.logger.debug("---ajx GET getDeltas ENDS")
+    return jsonify({'serverdata': tem_values})
+# fin getDeltas
+
+
+
 
 
