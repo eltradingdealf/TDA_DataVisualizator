@@ -177,7 +177,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Delta Pe = 1",
+                label: "Delta Pe = 3",
                 data:[],
                 fill: false,
                 borderColor: ['#00ff00'],
@@ -219,6 +219,7 @@ function defineChart_deltas() {
         },
         options:{
             responsive: true,
+            events: ['click'],
             //aspectRatio: 2,
             maintainAspectRatio: false,
 			hoverMode: 'index',
@@ -244,7 +245,7 @@ function defineChart_deltas() {
                         ticks: {
                             beginAtZero:false,
                             min:0,
-                            max:100
+                            max:150
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
