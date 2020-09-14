@@ -40,25 +40,16 @@
             <!-- MAIN CONTENT -->
             <div class="col md-12">
                 <div class="row">
-                    <div class="col-md-6">
-                        {% include "eurofx/market-eurofx-card-graph01.html" ignore missing %}
+                     <div class="col-md-1">
+                        &nbsp;
                     </div>
-
-                    <div class="col-md-6">
-                        {% include "eurofx/market-eurofx-card-graph02.html" ignore missing %}
+                    <div class="col-md-10">
+                        {% include "sections/market-card-graph01.html" ignore missing %}
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        {% include "eurofx/market-eurofx-card-data01.html" ignore missing %}
-                    </div>
-
-                    <div class="col-md-6">
-                        {% include "eurofx/market-eurofx-card-graph03.html" ignore missing %}
+                    <div class="col-md-1">
+                        &nbsp;
                     </div>
                 </div>
-
 
                 <div class="row">
                     <div class="col-md-12">
@@ -90,6 +81,7 @@
 
     <script>
         const domain = '{{datas.domain}}';
+        const THE_MARKET = 'EUROFX';
         let fecha = '{{datas.fecha}}';
         let sessionName = '{{datas.sessionName}}';
 
@@ -98,7 +90,7 @@
         let global_deltas_list_last_length = 1;
 
         let chart_deltas = null;
-        const CHART_DELTAS_X_AXIS_LENGTH = 20;
+        const CHART_DELTAS_X_AXIS_LENGTH = 40;
 
 
         $(document).ready(function() {
@@ -109,16 +101,17 @@
             initChartDataset_deltas();
 
             //INTERVAL
-            setInterval(function(){loadSessionName(domain);}, 60000);   //1 mins
-            console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
+            loadSessionName(domain, THE_MARKET);
+            setInterval(function(){loadSessionName(domain, THE_MARKET);}, 60000);   //1 mins
+            console.info('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
             //INTERVAL
-            getGlobaldata(domain)
-            setInterval(function(){getGlobaldata(domain);}, 5000);//0.5seg   //1000);// 1 seg
+            getGlobaldata(domain, THE_MARKET)
+            setInterval(function(){getGlobaldata(domain, THE_MARKET);}, 500);//0.5seg   //1000);// 1 seg
 
             //INTERVAL
-            getDeltas(domain)
-            setInterval(function(){getDeltas(domain);}, 5000);//0.5seg   //1000);// 1 seg
+            getDeltas(domain, THE_MARKET)
+            setInterval(function(){getDeltas(domain, THE_MARKET);}, 500);//0.5seg   //1000);// 1 seg
         });//fin ready
     </script>
 </html>

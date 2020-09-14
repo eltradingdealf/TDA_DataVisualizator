@@ -29,33 +29,41 @@
     </form>
 
     <!-- CONTAINER -->
-    <div class="container">
+    <div class="container-fluid">
         <!-- HEADER -->
         {% include "inc-header.html" ignore missing %}
         <!-- /HEADER -->
 
         <!-- MAIN BODY-->
         <div class="row">
-
+            CL
             <!-- MAIN CONTENT -->
             <div class="col md-12">
                 <div class="row">
-                    <div class="col-md-12">
+                     <div class="col-md-1">
+                        &nbsp;
                     </div>
+                    <div class="col-md-10">
+                        {% include "sections/market-card-graph01.html" ignore missing %}
+                    </div>
+                    <div class="col-md-1">
+                        &nbsp;
+                    </div>
+                </div>
 
+                <div class="row">
                     <div class="col-md-12">
-                        <div id="btnGotoFibexPage" class="d-flex justify-content-end btnFootCard">
+                        <div id="btnGotoIndexPage" class="d-flex justify-content-center btnFootCard">
                             <a href="{{datas.domain}}/etda/web/" class="btn btn-danger">Back to Home</a>
                         </div>
                     </div>
-
                 </div>
+
             </div>
             <!-- /MAIN CONTENT -->
 
         </div>
         <!-- /MAIN BODY-->
-
 
     </div>
     <!-- /CONTAINER -->
@@ -68,18 +76,42 @@
     <script src="{{datas.domain}}/static/js/bootstrap.min.js"></script>
     <script src="{{datas.domain}}/static/js/ie10-viewport-bug-workaround.js"></script>
     <script src="{{datas.domain}}/static/js/app.js"></script>
+    <script src="{{datas.domain}}/static/js/Chart.bundle.min.js"></script><!--https://www.chartjs.org/-->
+
 
     <script>
-        var mobile = '-';
-        var domain = '{{datas.domain}}';
+        const domain = '{{datas.domain}}';
+        const THE_MARKET = 'CL';
+        let fecha = '{{datas.fecha}}';
+        let sessionName = '{{datas.sessionName}}';
+
+        let global_deltas_lastCandle = 0;
+        const global_deltas_list = [];
+        let global_deltas_list_last_length = 1;
+
+        let chart_deltas = null;
+        const CHART_DELTAS_X_AXIS_LENGTH = 40;
+
 
         $(document).ready(function() {
+            //const mydomain = $('#mainform #mydomain').val();
 
-            const mydomain = $('#mainform #mydomain').val();
+            //CHART
+            defineChart_deltas();
+            initChartDataset_deltas();
 
-            console.log(mydomain);
+            //INTERVAL
+            loadSessionName(domain, THE_MARKET);
+            setInterval(function(){loadSessionName(domain, THE_MARKET);}, 60000);   //1 mins
+            console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
+            //INTERVAL
+            getGlobaldata(domain, THE_MARKET)
+            setInterval(function(){getGlobaldata(domain, THE_MARKET);}, 500);//0.5seg   //1000);// 1 seg
 
+            //INTERVAL
+            getDeltas(domain, THE_MARKET)
+            setInterval(function(){getDeltas(domain, THE_MARKET);}, 500);//0.5seg   //1000);// 1 seg
         });//fin ready
     </script>
 </html>

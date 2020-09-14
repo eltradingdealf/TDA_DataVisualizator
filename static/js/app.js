@@ -1,6 +1,6 @@
 
 
-function loadSessionName(_mydomain) {
+function loadSessionName(_mydomain, _market) {
     console.debug('->loadSessionName-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     var params = {};
@@ -13,7 +13,8 @@ function loadSessionName(_mydomain) {
             fecha = data['serverdata']['fecha'];
             sessionName = data['serverdata']['sessionName'];
 
-            $("#eurofx-cardheader-a").html(fecha);
+            const cabecera = fecha + ' * ' + _market + ' *';
+            $("#cardheader_a_h1").text(cabecera);
         }
         else {
             console.info('->loadSessionName-> Error requesting SessionName data:' + data['serverdata']['errormessage']);
@@ -27,25 +28,26 @@ function loadSessionName(_mydomain) {
 
 
 
-function getGlobaldata(_mydomain) {
+function getGlobaldata(_mydomain, _market) {
     console.debug('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     var params = {};
     params['sessionName'] = sessionName;
+    params['market'] = _market;
     console.debug('params: ' + JSON.stringify(params));
 
-    console.debug('->' + _mydomain + '/etda/ajx/eurofx/globaldata');
-    $.get(_mydomain + "/etda/ajx/eurofx/globaldata", params, function(data) {
+    console.debug('->' + _mydomain + '/etda/ajx/globaldata');
+    $.get(_mydomain + "/etda/ajx/globaldata", params, function(data) {
         console.debug('->getGlobaldata-> errormessage= ' + data['serverdata']['errormessage']);
         if('0' == data['serverdata']['errormessage']) {
 
-            $("#eurofx-glb-sessionname").html(sessionName);
-            $("#eurofx-glb-buyprice").html(data['serverdata']['buy_price']);
-            $("#eurofx-glb-sellprice").html(data['serverdata']['sell_price']);
-            $("#eurofx-glb-voltotal").html(data['serverdata']['volume_total']);
+            $("#glb-sessionname").html(sessionName);
+            $("#glb-buyprice").html(data['serverdata']['buy_price']);
+            $("#glb-sellprice").html(data['serverdata']['sell_price']);
+            $("#glb-voltotal").html(data['serverdata']['volume_total']);
         }
         else {
-            console.info('->getGlobaldata-> Error requesting EuroFX global data:' + data['serverdata']['errormessage']);
+            console.info('->getGlobaldata-> Error requesting Global data:' + data['serverdata']['errormessage']);
         }
 
         console.debug('->getGlobaldata-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
@@ -56,16 +58,17 @@ function getGlobaldata(_mydomain) {
 
 
 
-function getDeltas(_mydomain) {
+function getDeltas(_mydomain, _market) {
     console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     const params = {};
     params['sessionName'] = sessionName;
+    params['market'] = _market;
     params['lastCandle'] = global_deltas_lastCandle;
     console.debug('params: ' + JSON.stringify(params));
 
-    console.debug('->' + _mydomain + '/etda/ajx/eurofx/deltas');
-    $.get(_mydomain + "/etda/ajx/eurofx/deltas", params, function(data) {
+    console.debug('->' + _mydomain + '/etda/ajx/deltas');
+    $.get(_mydomain + "/etda/ajx/deltas", params, function(data) {
         console.debug('->getDeltas-> errormessage= ' + data['serverdata']['errormessage']);
         if('0' == data['serverdata']['errormessage']) {
 
@@ -76,26 +79,23 @@ function getDeltas(_mydomain) {
             console.debug('lastRecord: ' + JSON.stringify(lastRecord));
             global_deltas_lastCandle = lastRecord['candle_id']
 
-            $("#eurofx-deltas-candle_id").html(lastRecord['candle_id']);
-            $("#eurofx-deltas-delta").html(lastRecord['delta']);
-            $("#eurofx-deltas-vol_avg").html(lastRecord['vol_avg']);
-            $("#eurofx-deltas-delta_strong").html(lastRecord['delta_strong']);
-            $("#eurofx-deltas-delta_p1").html(lastRecord['delta_period']);
-            $("#eurofx-deltas-vol-filtered").html(lastRecord['vol_filtered']);
+            $("#deltas-candle_id").html(lastRecord['candle_id']);
+            $("#deltas-delta").html(lastRecord['delta']);
+            $("#deltas-vol_avg").html(lastRecord['vol_avg']);
+            $("#deltas-delta_strong").html(lastRecord['delta_strong']);
+            $("#deltas-delta_p1").html(lastRecord['delta_period']);
+            $("#deltas-vol-filtered").html(lastRecord['vol_filtered']);
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
             }
             global_deltas_list.push(...theRecords);
 
-            const lastRecordGlobal = global_deltas_list.slice(-1).pop();
-            console.debug('lastRecordGlobal: ' + JSON.stringify(lastRecordGlobal));
-
             //Update the chart
             updateChart_deltas();
         }
         else {
-            console.info('->getDeltas-> Error requesting EuroFX deltas data:' + data['serverdata']['errormessage']);
+            console.info('->getDeltas-> Error requesting Deltas data:' + data['serverdata']['errormessage']);
         }
 
         console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] ENDS AJX');
@@ -151,8 +151,6 @@ function updateChart_deltas() {
         chart_deltas.data.datasets[4].data.push(50);
     });
 
-    console.info('delta_period: ' + JSON.stringify(chart_deltas.data.datasets[1].data));
-    console.info('vol_filtered: ' + JSON.stringify(chart_deltas.data.datasets[2].data));
     chart_deltas.update();
     console.debug('chart_deltas updated');
 }
@@ -179,7 +177,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Delta Pe = 1",
+                label: "Delta Pe = 3",
                 data:[],
                 fill: false,
                 borderColor: ['#00ff00'],
@@ -221,7 +219,9 @@ function defineChart_deltas() {
         },
         options:{
             responsive: true,
-            aspectRatio: 2,
+            events: ['click'],
+            //aspectRatio: 2,
+            maintainAspectRatio: false,
 			hoverMode: 'index',
 			stacked: false,
 			title: {
@@ -245,7 +245,7 @@ function defineChart_deltas() {
                         ticks: {
                             beginAtZero:false,
                             min:0,
-                            max:100
+                            max:150
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -258,10 +258,6 @@ function defineChart_deltas() {
             }
         }
     });
-
-    //chart_deltas.canvas.parentNode.style.height = '200px';
-    //chart_deltas.canvas.parentNode.style.width = '400px';
-
 }//fin defineChart_deltas
 
 
@@ -274,6 +270,6 @@ function initChartDataset_deltas() {
         chart_deltas.data.datasets[1].data.push(0);
         chart_deltas.data.datasets[2].data.push(0);
         chart_deltas.data.datasets[3].data.push(0);
-        chart_deltas.data.datasets[4].data.push(0);
+        chart_deltas.data.datasets[4].data.push(50);
     }
 }

@@ -107,9 +107,12 @@ class RT_Dao():
                 sql = ''
                 if _market == Constantes.MARKET_EUROFX:
                     sql = query_sql.SQL_SELECT_DELTAS_EUROFX
-                else:
-                    #TODO
-                    sql = ''
+                elif _market == Constantes.MARKET_SP500:
+                    sql = query_sql.SQL_SELECT_DELTAS_SP500
+                elif _market == Constantes.MARKET_NASDAQ:
+                    sql = query_sql.SQL_SELECT_DELTAS_NASDAQ
+                elif _market == Constantes.MARKET_DAX:
+                    sql = query_sql.SQL_SELECT_DELTAS_DAX
                 #
 
                 cursor.execute(sql, (_lastCandle))
@@ -117,10 +120,10 @@ class RT_Dao():
                 for row in rs:
                     record = {
                         'candle_id': row['candle_id'],
-                        'delta': row['delta'],
+                        'delta_period': row['delta'],
                         'vol_avg': row['vol_avg'],
                         'delta_strong': row['delta_strong'],
-                        'delta_period': row['data03'],
+                        'delta': row['data03'],
                         'vol_filtered': row['data04']
                     }
 
