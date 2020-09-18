@@ -62,6 +62,7 @@ class RT_Dao():
                     result['sell_price'] = str(row['sell_price'])
                     result['vprofile'] = str(row['vprofile'])
                     result['volume_total'] = str(row['volume_total'])
+                    result['speed'] = str(row['speed'])
                 #
             #
             self.log.debug('=====mysql, getGlobaldata trap after harvest')
@@ -124,7 +125,8 @@ class RT_Dao():
                         'vol_avg': row['vol_avg'],
                         'delta_strong': row['delta_strong'],
                         'delta': row['data03'],
-                        'vol_filtered': row['data04']
+                        'vol_filtered': row['data04'],
+                        'speed': row['data05']
                     }
 
                     result.append(record)

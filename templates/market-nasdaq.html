@@ -92,6 +92,10 @@
         let chart_deltas = null;
         const CHART_DELTAS_X_AXIS_LENGTH = 40;
 
+        let chart_speed = null;
+        const global_speed_list = [];
+        let global_speed_list_last_length = 1;
+
 
         $(document).ready(function() {
             //const mydomain = $('#mainform #mydomain').val();
@@ -100,10 +104,14 @@
             defineChart_deltas();
             initChartDataset_deltas();
 
+            //CHART
+            defineChart_speed();
+            initChartDataset_speed();
+
             //INTERVAL
             loadSessionName(domain, THE_MARKET);
             setInterval(function(){loadSessionName(domain, THE_MARKET);}, 60000);   //1 mins
-            console.log('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
+            console.info('domain=' + domain + ', fecha=' + fecha + ', sessionName='+sessionName);
 
             //INTERVAL
             getGlobaldata(domain, THE_MARKET)
