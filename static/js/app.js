@@ -45,6 +45,8 @@ function getGlobaldata(_mydomain, _market) {
             $("#glb-buyprice").html(data['serverdata']['buy_price']);
             $("#glb-sellprice").html(data['serverdata']['sell_price']);
             $("#glb-voltotal").html(data['serverdata']['volume_total']);
+            $("#glb-speed").html(data['serverdata']['speed']);
+            $("#deltas-speed-i").html(data['serverdata']['speed']);
         }
         else {
             console.info('->getGlobaldata-> Error requesting Global data:' + data['serverdata']['errormessage']);
@@ -59,7 +61,7 @@ function getGlobaldata(_mydomain, _market) {
 
 
 function getDeltas(_mydomain, _market) {
-    console.debug('->getDeltas-> ' + '[' + new Date().toUTCString() + '] INIT');
+    console.info('->getDeltas-> ' + '[' + new Date().toUTCString() + '] INIT');
 
     const params = {};
     params['sessionName'] = sessionName;
@@ -81,18 +83,23 @@ function getDeltas(_mydomain, _market) {
 
             $("#deltas-candle_id").html(lastRecord['candle_id']);
             $("#deltas-delta").html(lastRecord['delta']);
-            $("#deltas-vol_avg").html(lastRecord['vol_avg']);
-            $("#deltas-delta_strong").html(lastRecord['delta_strong']);
             $("#deltas-delta_p1").html(lastRecord['delta_period']);
+            $("#deltas-vol_avg").html(lastRecord['vol_avg']);
+            $("#deltas-speed-p0").html(lastRecord['speed']);
             $("#deltas-vol-filtered").html(lastRecord['vol_filtered']);
+            $("#deltas-delta_strong").html(lastRecord['delta_strong']);
+
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
+                global_speed_list.pop();
             }
             global_deltas_list.push(...theRecords);
+            global_speed_list.push(...theRecords);
 
-            //Update the chart
+            //Update the chart;
             updateChart_deltas();
+            updateChart_speed();
         }
         else {
             console.info('->getDeltas-> Error requesting Deltas data:' + data['serverdata']['errormessage']);
@@ -113,7 +120,7 @@ function getDeltas(_mydomain, _market) {
 */
 
 function updateChart_deltas() {
-
+    console.debug('updateChart_deltas init ');
     let currentIndex = -1;
     if(global_deltas_list.length > global_deltas_list_last_length) {
         currentIndex = ((global_deltas_list.length - global_deltas_list_last_length) * -1) - 1;
@@ -121,7 +128,7 @@ function updateChart_deltas() {
     global_deltas_list_last_length = global_deltas_list.length;
 
     while(CHART_DELTAS_X_AXIS_LENGTH <= chart_deltas.data.datasets[0].data.length) {
-        console.info('shift');
+        console.debug(' updateChart_deltas shift');
         chart_deltas.data.labels.shift();
         chart_deltas.data.datasets[0].data.shift();
         chart_deltas.data.datasets[1].data.shift();
@@ -130,8 +137,8 @@ function updateChart_deltas() {
         chart_deltas.data.datasets[4].data.shift();
     }
 
-    console.info('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
-    console.info('currentIndex: ' + currentIndex);
+    console.debug('chart_deltas.data.datasets[0].data.length: ' + chart_deltas.data.datasets[0].data.length);
+    console.debug('updateChart_deltas currentIndex: ' + currentIndex);
 
     const newRecords = global_deltas_list.slice(currentIndex);
 
@@ -152,7 +159,44 @@ function updateChart_deltas() {
     });
 
     chart_deltas.update();
-    console.debug('chart_deltas updated');
+    console.debug('updateChart_deltas ends: ');
+}
+
+
+
+function updateChart_speed() {
+    console.debug('updateChart_speed init');
+
+    let currentIndex = -1;
+    if(global_speed_list.length > global_speed_list_last_length) {
+        currentIndex = ((global_speed_list.length - global_speed_list_last_length) * -1) - 1;
+    }
+    global_speed_list_last_length = global_speed_list.length;
+
+    while(CHART_DELTAS_X_AXIS_LENGTH <= chart_speed.data.datasets[0].data.length) {
+        console.debug('updateChart_speed shift');
+        chart_speed.data.labels.shift();
+        chart_speed.data.datasets[0].data.shift();
+        chart_speed.data.datasets[1].data.shift();
+    }
+
+    console.debug('chart_speed.data.datasets[0].data.length: ' + chart_speed.data.datasets[0].data.length);
+    console.debug('updateChart_speed currentIndex: ' + currentIndex);
+
+    const newRecords = global_speed_list.slice(currentIndex);
+
+    chart_speed.data.labels.pop();
+    chart_speed.data.datasets[0].data.pop();
+    chart_speed.data.datasets[1].data.pop();
+
+    newRecords.forEach(record => {
+        chart_speed.data.labels.push(record['candle_id']);
+        chart_speed.data.datasets[0].data.push(parseFloat(record['speed']));
+        chart_speed.data.datasets[1].data.push(parseFloat(record['vol_avg']));
+    });
+
+    chart_speed.update();
+    console.debug('updateChart_speed ends');
 }
 
 
@@ -271,5 +315,88 @@ function initChartDataset_deltas() {
         chart_deltas.data.datasets[2].data.push(0);
         chart_deltas.data.datasets[3].data.push(0);
         chart_deltas.data.datasets[4].data.push(50);
+    }
+}
+
+
+
+function defineChart_speed() {
+
+    var ctx = document.getElementById("chart_speed");
+    chart_speed = new Chart(ctx, {
+        type: 'line',
+        data : {
+            labels: [],
+            datasets: [{
+                label: "Speed p=0",
+                data:[],
+                fill: false,
+                borderColor: ['#00ff00'],
+                backgroundColor: ['#00ff00'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "Vol avg",
+                data:[],
+                fill: false,
+                borderColor: ['#ff1a1a'],
+                backgroundColor: ['#ff1a1a'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-2',
+            }]
+        },
+        options:{
+            responsive: true,
+            events: ['click'],
+            //aspectRatio: 2,
+            maintainAspectRatio: false,
+			hoverMode: 'index',
+			stacked: false,
+			title: {
+				display: true,
+				text: 'Pace of tape'
+			},
+            scales: {
+                yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            min:60,
+                            max:300
+                        },
+                        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: 'left',
+                        id: 'y-axis-1',
+                    },
+                    {
+                        ticks: {
+                            beginAtZero:true,
+                            min:0,
+                            max:6
+                        },
+                        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        gridLines: {
+                            drawOnChartArea: false, // only want the grid lines for one axis to show up
+                        }
+                    }]
+            }
+        }
+    });
+}//fin defineChart_speed
+
+
+
+function initChartDataset_speed() {
+
+    for(x = 0; x <= CHART_DELTAS_X_AXIS_LENGTH; x++) {
+        chart_speed.data.labels.push(0);
+        chart_speed.data.datasets[0].data.push(0);
+        chart_speed.data.datasets[1].data.push(0);
     }
 }
