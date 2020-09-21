@@ -288,8 +288,8 @@ function defineChart_deltas() {
                     {
                         ticks: {
                             beginAtZero:false,
-                            min:0,
-                            max:150
+                            min: CHART_DELTAS_SETUP_AXIS_Y2_MIN,
+                            max: CHART_DELTAS_SETUP_AXIS_Y2_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -363,8 +363,8 @@ function defineChart_speed() {
                 yAxes: [{
                         ticks: {
                             beginAtZero:true,
-                            min:60,
-                            max:300
+                            min: CHART_SPEED_SETUP_AXIS_Y1_MIN,
+                            max: CHART_SPEED_SETUP_AXIS_Y1_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
