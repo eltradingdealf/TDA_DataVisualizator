@@ -88,7 +88,7 @@ function getDeltas(_mydomain, _market) {
             $("#deltas-speed-p0").html(lastRecord['speed']);
             $("#deltas-vol-filtered").html(lastRecord['vol_filtered']);
             $("#deltas-delta_strong").html(lastRecord['delta_strong']);
-
+            $("#deltas-delta_WE-AVG_strong").html(lastRecord['delta_weight_avg_strong']);
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
@@ -231,7 +231,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Vol >= 10",
+                label: "Vol >= x",
                 data:[],
                 borderColor: ['#ff1a1a'],
                 backgroundColor: ['#ff1a1a'],
@@ -374,8 +374,8 @@ function defineChart_speed() {
                     {
                         ticks: {
                             beginAtZero:true,
-                            min:0,
-                            max:6
+                            min: CHART_SPEED_SETUP_AXIS_Y2_MIN,
+                            max: CHART_SPEED_SETUP_AXIS_Y2_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
