@@ -12,6 +12,7 @@
             <tbody>
                 <tr><!--1ª fila-->
                     <th scope="col"></th>
+                    <th scope="candle"></th>
                     <th scope="col">Buy price</th>
                     <th scope="col">Sell price</th>
                     <th scope="col">Vol. Total</th>
@@ -19,6 +20,7 @@
                 </tr>
                 <tr>
                     <td><span id="glb-sessionname">0</span></td>
+                    <td><span id="glb-candle">0</span></td>
                     <td><span id="glb-buyprice">0</span></td>
                     <td><span id="glb-sellprice">0</span></td>
                     <td><span id="glb-voltotal">0</span></td>
@@ -34,42 +36,48 @@
         <table class="table table-sm table-dark table-striped" id="table-computed02">
             <tbody>
                 <tr><!--1ª fila-->
-                    <th scope="col">Candle id</th>
-                    <th scope="col">Delta p=0&nbsp;&nbsp;&nbsp;</th>
-                    <th scope="col">Delta p=3 &nbsp;&nbsp;</th>
-                    <th scope="col">Delta filtered Strong&nbsp;&nbsp;&nbsp;</th>
-                    <th scope="col">WeAvg. dlt filt Strong</th>
+                    <th scope="col">Speed p=0</th>
+                    <th scope="col">Delta p=3</th>
+                    <th scope="col">Volume filtered</th>
+                    <th scope="col">Delta Strong</th>
+                    <th scope="col">Delta filtered Strong</th>
                 </tr>
                 <tr>
-                    <td><span id="deltas-candle_id">0</span></td>
-                    <td><span id="deltas-delta">0</span></td>
-                    <td><span id="deltas-delta_p1">0</span></td>
+                    <td><span id="deltas-speed-p0">0</span></td>
+                    <td><span id="deltas-delta_p1">0</span>%</td>
+                    <td><span id="deltas-vol-filtered">0</span></td>
                     <td><span id="deltas-delta_strong">0</span></td>
-                    <td><span id="deltas-delta_WE-AVG_strong">0</span></td>
+                    <td><span id="deltas-delta_filtered_strong">0</span></td>
                 </tr>
             </tbody>
         </table>
+
+
+        <div>
+            <canvas id="chart_speed" width="1550px" height="300px"></canvas>
+        </div>
+
         <table class="table table-sm table-dark table-striped" id="table-computed03">
             <tbody>
                 <tr><!--1ª fila-->
-                    <th scope="col">Candle id</th>
-                    <th scope="col">Speed inst</th>
-                    <th scope="col">Speed p=0</th>
                     <th scope="col">Volume average p0</th>
-                    <th scope="col">Volume filtered big</th>
+                    <th scope="col">Delta p=0</th>
+                    <th scope="col">Speed inst</th>
+                    <th scope="col">WeAvg. dlt Strong</th>
+                    <th scope="col">WeAvg. dlt filt Strong</th>
                 </tr>
                 <tr>
-                    <td><span id="deltas-candle_id_t2">0</span></td>
-                    <td><span id="deltas-speed-i">0</span></td>
-                    <td><span id="deltas-speed-p0">0</span></td>
                     <td><span id="deltas-vol_avg">0</span></td>
-                    <td><span id="deltas-vol-filtered">0</span></td>
+                    <td><span id="deltas-delta">0</span>%</td>
+                    <td><span id="deltas-speed-i">0</span></td>
+                    <td><span id="deltas-delta_WE-AVG_strong">0</span></td>
+                    <td><span id="deltas-delta_WE-AVG_filtered_strong">0</span></td>
                 </tr>
             </tbody>
         </table>
 
         <div>
-            <canvas id="chart_speed" width="1550px" height="300px"></canvas>
+            <canvas id="chart_strong" width="1550px" height="300px"></canvas>
         </div>
     </div>
 </div>
