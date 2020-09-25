@@ -216,8 +216,7 @@ function updateChart_strong() {
     global_strong_list_last_length = global_strong_list.length;
 
     while(CHART_X_AXIS_LENGTH <= chart_strong.data.datasets[0].data.length) {
-        console.debug('???? updatechart_strong shift');
-        chart_strong.data.labels.shift();
+        //chart_strong.data.labels.shift();
         chart_strong.data.datasets[0].data.shift();
         chart_strong.data.datasets[1].data.shift();
         chart_strong.data.datasets[2].data.shift();
@@ -228,13 +227,13 @@ function updateChart_strong() {
 
     const newRecords = global_strong_list.slice(currentIndex);
 
-    chart_strong.data.labels.pop();
+    //chart_strong.data.labels.pop();
     chart_strong.data.datasets[0].data.pop();
     chart_strong.data.datasets[1].data.pop();
     chart_strong.data.datasets[2].data.pop();
 
     newRecords.forEach(record => {
-        chart_strong.data.labels.push(record['candle_id']);
+        //chart_strong.data.labels.push(record['candle_id']);
         chart_strong.data.datasets[0].data.push(parseFloat(record['delta_weight_avg_filtered_strong']));
         chart_strong.data.datasets[1].data.push(parseFloat(record['delta_weight_avg_strong']));
         chart_strong.data.datasets[2].data.push(parseFloat(0));
@@ -519,9 +518,12 @@ function defineChart_strong() {
 function initChartDataset_strong() {
 
     for(x = 0; x <= CHART_X_AXIS_LENGTH; x++) {
-        chart_strong.data.labels.push(0);
         chart_strong.data.datasets[0].data.push(0);
         chart_strong.data.datasets[1].data.push(0);
         chart_strong.data.datasets[2].data.push(0);
+    }
+
+    for(x = CHART_X_AXIS_LENGTH; x >= 0; x--) {
+        chart_strong.data.labels.push(x);
     }
 }//fin initChartDataset_strong
