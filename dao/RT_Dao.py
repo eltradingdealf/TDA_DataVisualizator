@@ -126,7 +126,10 @@ class RT_Dao():
                         'delta_strong': row['delta_strong'],
                         'delta': row['data03'],
                         'vol_filtered': row['data04'],
-                        'speed': row['data05']
+                        'speed': row['data05'],
+                        'delta_weight_avg_filtered_strong': row['data06'],
+                        'delta_strong_filtered': row['data07'],
+                        'delta_weight_avg_strong': row['data08'],
                     }
 
                     result.append(record)

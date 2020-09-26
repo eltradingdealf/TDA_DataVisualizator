@@ -81,25 +81,30 @@ function getDeltas(_mydomain, _market) {
             console.debug('lastRecord: ' + JSON.stringify(lastRecord));
             global_deltas_lastCandle = lastRecord['candle_id']
 
-            $("#deltas-candle_id").html(lastRecord['candle_id']);
+            $("#glb-candle").html(lastRecord['candle_id']);
             $("#deltas-delta").html(lastRecord['delta']);
             $("#deltas-delta_p1").html(lastRecord['delta_period']);
             $("#deltas-vol_avg").html(lastRecord['vol_avg']);
             $("#deltas-speed-p0").html(lastRecord['speed']);
             $("#deltas-vol-filtered").html(lastRecord['vol_filtered']);
             $("#deltas-delta_strong").html(lastRecord['delta_strong']);
-
+            $("#deltas-delta_WE-AVG_strong").html(lastRecord['delta_weight_avg_strong']);
+            $("#deltas-delta_filtered_strong").html(lastRecord['delta_strong_filtered']);
+            $("#deltas-delta_WE-AVG_filtered_strong").html(lastRecord['delta_weight_avg_filtered_strong']);
 
             if(0 != global_deltas_list.length) {
                 global_deltas_list.pop();
                 global_speed_list.pop();
+                global_strong_list.pop();
             }
             global_deltas_list.push(...theRecords);
             global_speed_list.push(...theRecords);
+            global_strong_list.push(...theRecords);
 
             //Update the chart;
             updateChart_deltas();
             updateChart_speed();
+            updateChart_strong();
         }
         else {
             console.info('->getDeltas-> Error requesting Deltas data:' + data['serverdata']['errormessage']);
@@ -127,7 +132,7 @@ function updateChart_deltas() {
     }
     global_deltas_list_last_length = global_deltas_list.length;
 
-    while(CHART_DELTAS_X_AXIS_LENGTH <= chart_deltas.data.datasets[0].data.length) {
+    while(CHART_X_AXIS_LENGTH <= chart_deltas.data.datasets[0].data.length) {
         console.debug(' updateChart_deltas shift');
         chart_deltas.data.labels.shift();
         chart_deltas.data.datasets[0].data.shift();
@@ -173,7 +178,7 @@ function updateChart_speed() {
     }
     global_speed_list_last_length = global_speed_list.length;
 
-    while(CHART_DELTAS_X_AXIS_LENGTH <= chart_speed.data.datasets[0].data.length) {
+    while(CHART_X_AXIS_LENGTH <= chart_speed.data.datasets[0].data.length) {
         console.debug('updateChart_speed shift');
         chart_speed.data.labels.shift();
         chart_speed.data.datasets[0].data.shift();
@@ -198,6 +203,45 @@ function updateChart_speed() {
     chart_speed.update();
     console.debug('updateChart_speed ends');
 }
+
+
+
+function updateChart_strong() {
+    console.debug('???? updateChart_strong init');
+
+    let currentIndex = -1;
+    if(global_strong_list.length > global_strong_list_last_length) {
+        currentIndex = ((global_strong_list.length - global_strong_list_last_length) * -1) - 1;
+    }
+    global_strong_list_last_length = global_strong_list.length;
+
+    while(CHART_X_AXIS_LENGTH <= chart_strong.data.datasets[0].data.length) {
+        //chart_strong.data.labels.shift();
+        chart_strong.data.datasets[0].data.shift();
+        chart_strong.data.datasets[1].data.shift();
+        chart_strong.data.datasets[2].data.shift();
+    }
+
+    console.debug('chart_strong.data.datasets[0].data.length: ' + chart_strong.data.datasets[0].data.length);
+    console.debug('???? updatechart_strong currentIndex: ' + currentIndex);
+
+    const newRecords = global_strong_list.slice(currentIndex);
+
+    //chart_strong.data.labels.pop();
+    chart_strong.data.datasets[0].data.pop();
+    chart_strong.data.datasets[1].data.pop();
+    chart_strong.data.datasets[2].data.pop();
+
+    newRecords.forEach(record => {
+        //chart_strong.data.labels.push(record['candle_id']);
+        chart_strong.data.datasets[0].data.push(parseFloat(record['delta_weight_avg_filtered_strong']));
+        chart_strong.data.datasets[1].data.push(parseFloat(record['delta_weight_avg_strong']));
+        chart_strong.data.datasets[2].data.push(parseFloat(0));
+    });
+
+    chart_strong.update();
+    console.debug('updateChart_strong ends');
+}//fin updateChart_strong
 
 
 
@@ -231,7 +275,7 @@ function defineChart_deltas() {
                 yAxisID: 'y-axis-1'
             },
             {
-                label: "Vol >= 10",
+                label: "Vol >= x",
                 data:[],
                 borderColor: ['#ff1a1a'],
                 backgroundColor: ['#ff1a1a'],
@@ -288,8 +332,8 @@ function defineChart_deltas() {
                     {
                         ticks: {
                             beginAtZero:false,
-                            min:0,
-                            max:150
+                            min: CHART_DELTAS_SETUP_AXIS_Y2_MIN,
+                            max: CHART_DELTAS_SETUP_AXIS_Y2_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -308,7 +352,7 @@ function defineChart_deltas() {
 
 function initChartDataset_deltas() {
 
-    for(x = 0; x <= CHART_DELTAS_X_AXIS_LENGTH; x++) {
+    for(x = 0; x <= CHART_X_AXIS_LENGTH; x++) {
         chart_deltas.data.labels.push(0);
         chart_deltas.data.datasets[0].data.push(0);
         chart_deltas.data.datasets[1].data.push(0);
@@ -363,8 +407,8 @@ function defineChart_speed() {
                 yAxes: [{
                         ticks: {
                             beginAtZero:true,
-                            min:60,
-                            max:300
+                            min: CHART_SPEED_SETUP_AXIS_Y1_MIN,
+                            max: CHART_SPEED_SETUP_AXIS_Y1_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -374,8 +418,8 @@ function defineChart_speed() {
                     {
                         ticks: {
                             beginAtZero:true,
-                            min:0,
-                            max:6
+                            min: CHART_SPEED_SETUP_AXIS_Y2_MIN,
+                            max: CHART_SPEED_SETUP_AXIS_Y2_MAX
                         },
                         type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                         display: true,
@@ -394,9 +438,92 @@ function defineChart_speed() {
 
 function initChartDataset_speed() {
 
-    for(x = 0; x <= CHART_DELTAS_X_AXIS_LENGTH; x++) {
+    for(x = 0; x <= CHART_X_AXIS_LENGTH; x++) {
         chart_speed.data.labels.push(0);
         chart_speed.data.datasets[0].data.push(0);
         chart_speed.data.datasets[1].data.push(0);
     }
 }
+
+
+function defineChart_strong() {
+
+    var ctx = document.getElementById("chart_strong");
+    chart_strong = new Chart(ctx, {
+        type: 'line',
+        data : {
+            labels: [],
+            datasets: [{
+                label: "Weighted Average Vol filtered Delta Strong",
+                data:[],
+                fill: false,
+                borderColor: ['#00ff00'],
+                backgroundColor: ['#00ff00'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "Weighted Average Vol Delta Strong",
+                data:[],
+                fill: false,
+                borderColor: ['#3333ff'],
+                backgroundColor: ['#3333ff'],
+                borderWidth: 1,
+                pointRadius: 0,
+                yAxisID: 'y-axis-1'
+            },
+            {
+                label: "zero line",
+                data:[],
+                fill: false,
+                borderColor: ['#ffffff'],
+                backgroundColor: ['#ffffff'],
+                borderWidth: 1,
+                pointRadius: 0,
+                borderDash: [10, 10],
+                yAxisID: 'y-axis-1'
+            }]
+        },
+        options:{
+            responsive: true,
+            events: ['click'],
+            //aspectRatio: 2,
+            maintainAspectRatio: false,
+			hoverMode: 'index',
+			stacked: false,
+			title: {
+				display: true,
+				text: 'Delta Strong'
+			},
+            scales: {
+                yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            min: CHART_STRONG_SETUP_AXIS_Y1_MIN,
+                            max: CHART_STRONG_SETUP_AXIS_Y1_MAX
+                        },
+                        type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                        display: true,
+                        position: 'left',
+                        id: 'y-axis-1',
+                    }]
+            }
+        }
+    });
+}//fin defineChart_strong
+
+
+
+function initChartDataset_strong() {
+
+    for(x = 0; x <= CHART_X_AXIS_LENGTH; x++) {
+        chart_strong.data.datasets[0].data.push(0);
+        chart_strong.data.datasets[1].data.push(0);
+        chart_strong.data.datasets[2].data.push(0);
+    }
+
+    for(x = CHART_X_AXIS_LENGTH; x >= 0; x--) {
+        chart_strong.data.labels.push(x);
+    }
+}//fin initChartDataset_strong
