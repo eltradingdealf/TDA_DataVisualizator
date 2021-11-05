@@ -4,6 +4,7 @@
 
     @author Alfredo Sanz
     @date April 2020
+    @update Nov 2021
 """
 # APIs imports
 
@@ -23,6 +24,8 @@ MARKET_SP500    =   "SP500"
 MARKET_NASDAQ   =   "NASDAQ"
 MARKET_DAX      =   "DAX"
 MARKET_CL       =   "CL"
+MARKET_BUND     =   "BUND"
+MARKET_STOXX50  =   "STOXX50"
 
 # ---------CALENDAR----------
 INIT_TRADING_TIME_HOUR = 8

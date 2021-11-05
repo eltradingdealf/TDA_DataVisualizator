@@ -81,28 +81,37 @@
 
     <script>
         const domain = '{{datas.domain}}';
-        const THE_MARKET = 'CL';
+        const THE_MARKET = 'STOXX50';
         let fecha = '{{datas.fecha}}';
         let sessionName = '{{datas.sessionName}}';
 
+        const CHART_X_AXIS_LENGTH = 40;
         let global_deltas_lastCandle = 0;
+
+        //CHART
+        let chart_deltas = null;
         const global_deltas_list = [];
         let global_deltas_list_last_length = 1;
+        const CHART_DELTAS_SETUP_AXIS_Y2_MIN = {{ datas.CHART_DELTAS_SETUP_AXIS_Y2_MIN }};
+        const CHART_DELTAS_SETUP_AXIS_Y2_MAX = {{ datas.CHART_DELTAS_SETUP_AXIS_Y2_MAX }};
 
-        let chart_deltas = null;
-        const CHART_DELTAS_X_AXIS_LENGTH = 40;
-
+        //CHART
         let chart_speed = null;
         const global_speed_list = [];
         let global_speed_list_last_length = 1;
+        const CHART_SPEED_SETUP_AXIS_Y1_MIN = {{ datas.CHART_SPEED_SETUP_AXIS_Y1_MIN }};
+        const CHART_SPEED_SETUP_AXIS_Y1_MAX = {{ datas.CHART_SPEED_SETUP_AXIS_Y1_MAX }};
+        const CHART_SPEED_SETUP_AXIS_Y2_MIN = {{ datas.CHART_SPEED_SETUP_AXIS_Y2_MIN }};
+        const CHART_SPEED_SETUP_AXIS_Y2_MAX = {{ datas.CHART_SPEED_SETUP_AXIS_Y2_MAX }};
 
-        CHART_DELTAS_SETUP_AXIS_Y2_MIN = 35;
-        CHART_DELTAS_SETUP_AXIS_Y2_MAX = 200;
+        //CHART
+        let chart_strong = null;
+        const global_strong_list = [];
+        let global_strong_list_last_length = 1;
+        const CHART_STRONG_SETUP_AXIS_Y1_MIN = {{ datas.CHART_STRONG_SETUP_AXIS_Y1_MIN }};
+        const CHART_STRONG_SETUP_AXIS_Y1_MAX = {{ datas.CHART_STRONG_SETUP_AXIS_Y1_MAX }};
 
-        CHART_SPEED_SETUP_AXIS_Y1_MIN = 25;
-        CHART_SPEED_SETUP_AXIS_Y1_MAX = 150;
-        CHART_SPEED_SETUP_AXIS_Y2_MIN = 0;
-        CHART_SPEED_SETUP_AXIS_Y2_MAX = 10;
+
 
         $(document).ready(function() {
             //const mydomain = $('#mainform #mydomain').val();
@@ -114,6 +123,10 @@
             //CHART
             defineChart_speed();
             initChartDataset_speed();
+
+            //CHART
+            defineChart_strong();
+            initChartDataset_strong();
 
             //INTERVAL
             loadSessionName(domain, THE_MARKET);

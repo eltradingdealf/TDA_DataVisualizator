@@ -36,3 +36,15 @@ SQL_SELECT_DELTAS_DAX =         """ SELECT sessiondate, candle_id, delta, vol_av
                                     FROM trading_db.visu_datacalc_dax
                                     WHERE candle_id >= %s                                        
                                 """
+
+SQL_SELECT_DELTAS_BUND =        """ SELECT sessiondate, candle_id, delta, vol_avg, delta_strong, data03, data04, 
+                                            data05, data06, data07, data08
+                                    FROM trading_db.visu_datacalc_bund
+                                    WHERE candle_id >= %s                                        
+                                """
+
+SQL_SELECT_DELTAS_STOXX50 =     """ SELECT sessiondate, candle_id, delta, vol_avg, delta_strong, data03, data04, 
+                                            data05, data06, data07, data08
+                                    FROM trading_db.visu_datacalc_stoxx50
+                                    WHERE candle_id >= %s                                        
+                                """

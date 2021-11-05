@@ -82,7 +82,7 @@ def helloWeb():
             # controller = Mainpage_Controller()
             # errormessage, resultData = controller.datosBasicosPortada(request, u'PORTADA')
 
-            resultData['fecha'] = "10-10-2019"
+            resultData['fecha'] = "10-10-2021"
 
         except Exception as err:
             app.logger.error(str(err))
@@ -125,6 +125,15 @@ def gotoEurofx():
 
             resultData['fecha'] = thetime['strFecha']
             resultData['sessionName'] = controller.getSessionName()
+            resultData['CHART_X_AXIS_LENGTH'] = 40
+            resultData['CHART_DELTAS_SETUP_AXIS_Y2_MIN'] = 35
+            resultData['CHART_DELTAS_SETUP_AXIS_Y2_MAX'] = 200
+            resultData['CHART_SPEED_SETUP_AXIS_Y1_MIN'] = 30
+            resultData['CHART_SPEED_SETUP_AXIS_Y1_MAX'] = 150
+            resultData['CHART_SPEED_SETUP_AXIS_Y2_MIN'] = 0
+            resultData['CHART_SPEED_SETUP_AXIS_Y2_MAX'] = 6
+            resultData['CHART_STRONG_SETUP_AXIS_Y1_MIN'] = -200
+            resultData['CHART_STRONG_SETUP_AXIS_Y1_MAX'] = 200
 
         except Exception as err:
             app.logger.error(str(err))
@@ -233,9 +242,9 @@ def gotoNasdaq():
 
 
 
-@app.route("/etda/web/cl")
-def gotoCL():
-    app.logger.info("---gotoCL INIT")
+@app.route("/etda/web/stoxx50")
+def gotoSTOXX50():
+    app.logger.info("---gotoSTOXX50 INIT")
 
     errormessage = '0'
     tem_values = {}
@@ -251,6 +260,15 @@ def gotoCL():
 
             resultData['fecha'] = thetime['strFecha']
             resultData['sessionName'] = controller.getSessionName()
+            resultData['CHART_X_AXIS_LENGTH'] = 40
+            resultData['CHART_DELTAS_SETUP_AXIS_Y2_MIN'] = 35
+            resultData['CHART_DELTAS_SETUP_AXIS_Y2_MAX'] = 200
+            resultData['CHART_SPEED_SETUP_AXIS_Y1_MIN'] = 30
+            resultData['CHART_SPEED_SETUP_AXIS_Y1_MAX'] = 150
+            resultData['CHART_SPEED_SETUP_AXIS_Y2_MIN'] = 0
+            resultData['CHART_SPEED_SETUP_AXIS_Y2_MAX'] = 6
+            resultData['CHART_STRONG_SETUP_AXIS_Y1_MIN'] = -200
+            resultData['CHART_STRONG_SETUP_AXIS_Y1_MAX'] = 200
 
         except Exception as err:
             app.logger.error(str(err))
@@ -269,8 +287,8 @@ def gotoCL():
     #
 
     # logging.info('tem_values=' + repr(tem_values))
-    app.logger.info("---gotoCL ENDS")
-    return render_template('market-cl.html', datas=tem_values)
+    app.logger.info("---gotoSTOXX50 ENDS")
+    return render_template('market-stoxx50.html', datas=tem_values)
 # fin gotoCL
 
 
@@ -314,6 +332,46 @@ def gotoDAX():
     return render_template('market-dax.html', datas=tem_values)
 # fin gotoDAX
 
+
+@app.route("/etda/web/bund")
+def gotoBUND():
+    app.logger.info("---gotoBUND INIT")
+
+    errormessage = '0'
+    tem_values = {}
+    resultData = {}
+
+    try:
+        app.logger.debug(request.url_root)
+
+        # Call to Controller
+        try:
+            controller = RTController()
+            thetime = controller.getTheTime()
+
+            resultData['fecha'] = thetime['strFecha']
+            resultData['sessionName'] = controller.getSessionName()
+
+        except Exception as err:
+            app.logger.error(str(err))
+            app.logger.exception("@Error")
+        #
+
+        tem_values = {'errormessage': errormessage,
+                      'domain': request.url_root[:-1]  # quita la barra final
+                      }
+        tem_values.update(resultData)
+
+    except Exception as err:
+        app.logger.error(str(err))
+        app.logger.exception("@Error")
+        errormessage = '*Error Redirecting index: ' + str(err)
+    #
+
+    # logging.info('tem_values=' + repr(tem_values))
+    app.logger.info("---gotoBUND ENDS")
+    return render_template('market-bund.html', datas=tem_values)
+# fin gotoBUND
 
 
 @app.route('/etda/ajx/sessionName', methods=['GET'])
