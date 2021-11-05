@@ -29,16 +29,16 @@
     </form>
 
     <!-- CONTAINER -->
-    <div class="container">
+    <div class="container-fluid">
         <!-- HEADER -->
         {% include "inc-header.html" ignore missing %}
         <!-- /HEADER -->
 
         <!-- MAIN BODY-->
         <div class="row">
-            DAX
+
             <!-- MAIN CONTENT -->
-              <div class="col md-12">
+            <div class="col md-12">
                 <div class="row">
                      <div class="col-md-1">
                         &nbsp;
@@ -65,7 +65,6 @@
         </div>
         <!-- /MAIN BODY-->
 
-
     </div>
     <!-- /CONTAINER -->
 
@@ -79,9 +78,10 @@
     <script src="{{datas.domain}}/static/js/app.js"></script>
     <script src="{{datas.domain}}/static/js/Chart.bundle.min.js"></script><!--https://www.chartjs.org/-->
 
+
     <script>
         const domain = '{{datas.domain}}';
-        const THE_MARKET = 'DAX';
+        const THE_MARKET = 'BUND';
         let fecha = '{{datas.fecha}}';
         let sessionName = '{{datas.sessionName}}';
 
@@ -92,24 +92,25 @@
         let chart_deltas = null;
         const global_deltas_list = [];
         let global_deltas_list_last_length = 1;
-        const CHART_DELTAS_SETUP_AXIS_Y2_MIN = 5;
-        const CHART_DELTAS_SETUP_AXIS_Y2_MAX = 100;
+        const CHART_DELTAS_SETUP_AXIS_Y2_MIN = 1000;
+        const CHART_DELTAS_SETUP_AXIS_Y2_MAX = 2000;
 
         //CHART
         let chart_speed = null;
         const global_speed_list = [];
         let global_speed_list_last_length = 1;
-        const CHART_SPEED_SETUP_AXIS_Y1_MIN = 15;
+        const CHART_SPEED_SETUP_AXIS_Y1_MIN = 20;
         const CHART_SPEED_SETUP_AXIS_Y1_MAX = 100;
         const CHART_SPEED_SETUP_AXIS_Y2_MIN = 0;
-        const CHART_SPEED_SETUP_AXIS_Y2_MAX = 5;
+        const CHART_SPEED_SETUP_AXIS_Y2_MAX = 20;
 
         //CHART
         let chart_strong = null;
         const global_strong_list = [];
         let global_strong_list_last_length = 1;
-        const CHART_STRONG_SETUP_AXIS_Y1_MIN = -200;
-        const CHART_STRONG_SETUP_AXIS_Y1_MAX = 200;
+        const CHART_STRONG_SETUP_AXIS_Y1_MIN = -800;
+        const CHART_STRONG_SETUP_AXIS_Y1_MAX = 800;
+
 
         $(document).ready(function() {
             //const mydomain = $('#mainform #mydomain').val();

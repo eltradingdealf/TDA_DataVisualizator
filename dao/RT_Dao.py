@@ -4,6 +4,7 @@
 
     @author Alfredo Sanz
     @date April 2020
+    @update Nov 2021
 """
 
 # APIs imports
@@ -114,6 +115,10 @@ class RT_Dao():
                     sql = query_sql.SQL_SELECT_DELTAS_NASDAQ
                 elif _market == Constantes.MARKET_DAX:
                     sql = query_sql.SQL_SELECT_DELTAS_DAX
+                elif _market == Constantes.MARKET_BUND:
+                    sql = query_sql.SQL_SELECT_DELTAS_BUND
+                elif _market == Constantes.MARKET_STOXX50:
+                    sql = query_sql.SQL_SELECT_DELTAS_STOXX50
                 #
 
                 cursor.execute(sql, (_lastCandle))
