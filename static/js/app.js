@@ -163,7 +163,7 @@ function updateChart_deltas() {
         chart_deltas.data.datasets[4].data.push(50);
     });
 
-    chart_deltas.update();
+    chart_deltas.update('none');
     console.debug('updateChart_deltas ends: ');
 }
 
@@ -200,7 +200,7 @@ function updateChart_speed() {
         chart_speed.data.datasets[1].data.push(parseFloat(record['vol_avg']));
     });
 
-    chart_speed.update();
+    chart_speed.update('none');
     console.debug('updateChart_speed ends');
 }
 
@@ -239,7 +239,7 @@ function updateChart_strong() {
         chart_strong.data.datasets[2].data.push(parseFloat(0));
     });
 
-    chart_strong.update();
+    chart_strong.update('none');
     console.debug('updateChart_strong ends');
 }//fin updateChart_strong
 
@@ -308,14 +308,17 @@ function defineChart_deltas() {
         options:{
             responsive: true,
             events: ['click'],
-            //aspectRatio: 2,
-            maintainAspectRatio: false,
-			hoverMode: 'index',
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
 			stacked: false,
-			title: {
-				display: true,
-				text: 'Deltas and volume average'
-			},
+			plugins: {
+              title: {
+                display: true,
+                text: 'Deltas and volume average'
+              }
+            },
             scales: {
                 yAxes: [{
                         ticks: {
